@@ -5,14 +5,21 @@
 
 /*
 [Dataset 1 Name] grad17
+
 [Dataset Description] Graduates meeting University of California (UC)/California
- State University (CSU) entrance requirements by racial/ethnic 
-group and school, AY2016-17
+State University (CSU) entrance requirements by racial/ethnic group and school, 
+AY2016-17
+
 [Experimental Unit Description] California public K-12 schools in AY2016-17
+
 [Number of Observations] 2,535
+
 [Number of Features] 15
+
 [Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=GradEth&cPage=filesgrad.asp was downloaded and edited to produce file grad17.xls by importing into Excel. And the column CDS_CODE was set to 'TEXT' format.
+
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
+
 [Unique ID Schema] The unique id column CDS_CODE in dataset grad17 is the 
 primary key column.
 */
@@ -22,16 +29,24 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad17.xlsx
 ;
 %let inputDataset1Type = XLSX;
 
+
 /*
 [Dataset 2 Name] grad16
+
 [Dataset Description] SGraduates meeting University of California (UC)/
 California State University (CSU) entrance requirements by racial/ethnic group 
 and school, AY2015-16
+
 [Experimental Unit Description] California public K-12 schools in AY2015-16
+
 [Number of Observations] 2,521
+
 [Number of Features] 15
+
 [Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=GradEth&cPage=filesgrad.asp was downloaded and edited to produce file grad16.xls by importing into Excel. And the column CDS_CODE was set to 'TEXT' format. 
+
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
+
 [Unique ID Schema] The unique id column CDS_CODE in dataset grad16 is the 
 primary key column.
 */
@@ -43,12 +58,17 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad16.xlsx
 
 /*
 [Dataset 3 Name] StaffAssign16
+
 [Dataset Description] Assignment data for all K-12 California public education 
 certificated teachers, administrators, and pupil services personnel, AY2016-17
+
 [Experimental Unit Description] K-12 California public education certificated 
 teachers, administrators, and pupil services personnel, AY2016-17
+
 [Number of Observations] 40,000
+
 [Number of Features] 5
+
 [Data Source] The file
 http://www3.cde.ca.gov/download/dq/StaffAssign16.zip
 was downloaded, imported into R with all columns setting to Character class. To 
@@ -56,7 +76,9 @@ make the file less than 5MB, 40000 rows were picked out of all the observation
 units randomly , and all the columns except 'DistrictCode', 'SchoolCode', 
 'StaffType', 'EstimatedFTE' and 'File Created' were removed. The R dateframe 
 produced was then imported into Excel to produce file StaffAssign.xls 
+
 [Data Dictionary] http://www.cde.ca.gov/ds/sd/sd/fsgradaf09.asp
+
 [Unique ID Schema] The columns "District Code" and "School Code" form a 
 composite key, which together are equivalent to the unique id column CDS_CODE in 
 dataset grad16 and grad17.
@@ -69,15 +91,21 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/StaffAssign
 
 /*
 [Dataset 4 Name] enr16
+
 [Dataset Description] Enrollment data for primary enrollments, AY2016-17
+
 [Experimental Unit Description] California public K-12 schools in AY2016-17
+
 [Number of Observations] 8239
+
 [Number of Features] 4
+
 [Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
 was downloaded, imported into R with all columns setting to Character class. As 
 not all the schools have a considerably large number of Grade 12 students, rows 
 with the value of column 'GR_12' less than 10 were removed. All the columns 
 except 'CDS_CODE', 'ETHNIC', 'GENDER' and 'GR_12' were removed.
+
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
 [Unique ID Schema] The unique id column CDS_CODE in dataset enr16 is the primary 
 key column.
