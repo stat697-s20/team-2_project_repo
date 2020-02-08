@@ -6,9 +6,7 @@
 /*
 [Dataset 1 Name] grad17
 
-[Dataset Description] Graduates meeting University of California (UC)/California
-State University (CSU) entrance requirements by racial/ethnic group and school, 
-AY2016-17
+[Dataset Description] Graduates meeting University of California (UC)/California State University (CSU) entrance requirements by racial/ethnic group and school, AY2016-17
 
 [Experimental Unit Description] California public K-12 schools in AY2016-17
 
