@@ -6,9 +6,7 @@
 /*
 [Dataset 1 Name] grad17
 
-[Dataset Description] Graduates meeting University of California (UC)/California
-State University (CSU) entrance requirements by racial/ethnic group and school, 
-AY2016-17
+[Dataset Description] Graduates meeting University of California (UC)/California State University (CSU) entrance requirements by racial/ethnic group and school, AY2016-17
 
 [Experimental Unit Description] California public K-12 schools in AY2016-17
 
@@ -116,14 +114,18 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/enr16.xlsx?
 ;
 %let inputDataset4Type = XLSX;
 
+/* load raw datasets over the wire, if they doesn't already exist */
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
-    %put &=dsn;
+    /*input the macro variables of the dsn, url and dataset file type*/
+	%put &=dsn;
     %put &=url;
     %put &=filetype;
     %if
+		/* to check they doesn't already exist */
         %sysfunc(exist(&dsn.)) = 0
     %then
         %do;
+			/* loading datasets over the line */
             %put Loading dataset &dsn. over the wire now...;
             filename
                 tempfile
