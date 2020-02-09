@@ -130,7 +130,7 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 /* load raw datasets over the wire, if they doesn't already exist */
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
     /*input the macro variables of the dsn, url and dataset file type*/
-	%put &=dsn;
+    %put &=dsn;
     %put &=url;
     %put &=filetype;
     %if
@@ -173,6 +173,136 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %mend;
 %loadDatasets
 
+
+proc sql;
+    /* check for duplicate unique id values; after executing this query, we see
+    that grad17_raw_dups has no missing unique id component */
+    create table grad17_raw_dups as
+        select
+            COUNTY
+            ,DISTRICT
+            ,SCHOOL
+            ,count(*) as row_count_for_unique_id_value
+        from
+            grad17
+        group by
+            COUNTY
+            ,DISTRICT
+            ,SCHOOL
+        having
+            row_count_for_unique_id_value > 1
+    ;
+    /* remove rows with missing unique id components, or with unique ids that do 
+    not correspond to schools; after executing this query, the new dataset from
+    grad1617 will have no duplicate/repeated unique id values, and all unique id
+    values will correspond to our experimental units of interest, which are
+    California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
+    SCHOOL in grad1617 are guaranteed to form a composite key */
+    create table grad1617 as
+        select
+            *
+        from
+            grad17
+        where
+            /* remove rows with missing unique id value components */
+            not(missing(COUNTY))
+            and
+            not(missing(DISTRICT))
+            and
+            not(missing(SCHOOL))
+    ;
+quit;
+
+
+* check grad16 for bad unique id values, where the columns COUNTY, DISTRICT, and
+* SCHOOL form a composite key;
+proc sql;
+    /* check for duplicate unique id values; after executing this query, we see
+    that grad16 contains now rows, so no mitigation is needed to ensure
+    uniqueness */
+    create table grad16_dups as
+        select
+            COUNTY
+            ,DISTRICT
+            ,SCHOOL
+            ,count(*) as row_count_for_unique_id_value
+        from
+            grad16
+        group by
+            COUNTY
+            ,DISTRICT
+            ,SCHOOL
+        having
+            row_count_for_unique_id_value > 1
+    ;
+    /* remove rows with missing unique id components, or iwht unique ids that do
+    not correspond to schools; after executing this query, the new dataset 
+    grad1516 will have no duplicate/repeated unique id values, and all unique id
+    values will correspond to our experimental units of interest, which are 
+    California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
+    SCHOOL in grad1516 are guaranteed to form a composite key */
+    create table grad1516 as
+        select
+            *
+        from
+            grad16
+        where
+            /* remove rows with missing unique id value components */
+            not(missing(COUNTY))
+            and
+            not(missing(DISTRICT))
+            and
+            not(missing(SCHOOL))
+    ;
+quit;
+
+* check grad17 for bad unique id values, where the column CDS_CODE is intended 
+* to be a primary key;
+proc sql;
+    /* check for unique id values that are repeated, missing, or correspond to
+    non-schools; after executing this query, we see that 
+    grad17_raw_bad_unique_ids only has no-school values of CDS_CODE that need to 
+    be removed. The query below allows us to build a fit-for-purpose mitigation 
+    step with no guessing or unnecessary effort */
+    create table grad17_raw_bad_unique_ids as
+        select
+            A.*
+        from
+            grad17 as A
+            left join
+            (
+                select
+                    CDS_CODE
+                    ,count(*) as row_count_for_unique_id_value
+                from
+                    grad17
+                group by
+                    CDS_CODE
+            ) as B
+            on A.CDS_CODE=B.CDS_CODE
+        having
+            /*capture rows corresponding to repeated primary key values */
+            row_count_for_unique_id_value > 1
+            or
+            /* capture rows corresponding to missing primary key values */
+            missing(CDS_CODE)
+            or
+            /* capture rows corresponding to non-school primary key values */
+            substr(CDS_CODE,8,7) in ("0000000","0000001")
+    ;
+    /* remove rows with primary keys that do not correspond to schools; after
+    executing this query, the new dataset grad1617 will have no 
+    duplicate/repeated unique id values, and all unique id values will 
+    correspond to our experimental units of interest, which are California 
+    Public K-12 schools; this means the column CDS_CODE in grad1617 is 
+    guaranteed to form a primary key */
+    create table grad1617 as
+        select
+            *
+        from
+            grad17
+    ;
+quit;
 
 proc sql;
     /* as one specific school goes with multiple rows of data with each row 
@@ -270,6 +400,70 @@ proc sql;
     ;
 quit;
 title;
+
+
+
+/* We want to identify duplicates in the unique primary key CDS_CODE in dataset grad17. */
+
+
+proc sql; 
+    create table grad17_clean as
+        select
+            CDS_CODE
+            ,COUNTY
+            ,HISPANIC
+            ,AM_IND
+            ,AFRICAN_AM
+            ,WHITE
+            ,TOTAL
+        from 
+            grad17
+        group by 
+            COUNTY
+    ;
+
+/* It is too mundane to compare the graduation rate between all schools and school districts in the State of California. Rather, we combine them by County */
+    create table grad17_county as
+        select
+            COUNTY
+            ,HISPANIC
+            ,AM_IND
+            ,AFRICAN_AM
+            ,WHITE
+            ,sum(TOTAL) as COUNTY_TOTAL
+        from grad17_clean
+        group by COUNTY
+    ;
+quit;
+
+title "Inspect Percent_Graduation_by_Race in grad1617";
+proc sql;
+    select
+        min(Percent_Graduation_by_Race) as min
+        ,max(Percent_Graduation_by_Race) as max
+        ,mean(Percent_Graduation_by_Race) as max
+        ,median(Percent_Graduation_by_Race) as max
+        ,nmiss(Percent_Graduation_by_Race) as missing
+    from
+        grad1617
+    ;
+quit;
+title;
+
+title "Inspect Percent_Graduation_by_Race in grad1516";
+proc sql;
+    select
+         min(Percent_Graduation_by_Race) as min
+        ,max(Percent_Graduation_by_Race) as max
+        ,mean(Percent_Graduation_by_Race) as max
+        ,median(Percent_Graduation_by_Race) as max
+        ,nmiss(Percent_Graduation_by_Race) as missing
+    from
+        grad1516
+    ;
+quit;
+title;
+
 
 /* using the TABLES dictionary table view to get detailed list of files we've
 generated above*/
