@@ -6,7 +6,9 @@
 /*
 [Dataset 1 Name] grad17
 
-[Dataset Description] Graduates meeting University of California (UC)/California State University (CSU) entrance requirements by racial/ethnic group and school, AY2016-17
+[Dataset Description] Graduates meeting University of California (UC)/California 
+State University (CSU) entrance requirements by racial/ethnic group and school, 
+AY2016-17
 
 [Experimental Unit Description] California public K-12 schools in AY2016-17
 
@@ -14,7 +16,10 @@
 
 [Number of Features] 15
 
-[Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=GradEth&cPage=filesgrad.asp was downloaded and edited to produce file grad17.xls by importing into Excel. And the column CDS_CODE was set to 'TEXT' format.
+[Data Source] The file 
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=GradEth&cPage=filesgrad.asp 
+was downloaded and edited to produce file grad17.xls by importing into Excel. 
+And the column CDS_CODE was set to 'TEXT' format.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
 
@@ -23,7 +28,7 @@ primary key column.
 */
 %let inputDataset1DSN = grad17;
 %let inputDataset1URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad17.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad17.xlsx?raw=true
 ;
 %let inputDataset1Type = XLSX;
 
@@ -41,7 +46,10 @@ and school, AY2015-16
 
 [Number of Features] 15
 
-[Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=GradEth&cPage=filesgrad.asp was downloaded and edited to produce file grad16.xls by importing into Excel. And the column CDS_CODE was set to 'TEXT' format. 
+[Data Source] The file 
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=GradEth&cPage=filesgrad.asp 
+was downloaded and edited to produce file grad16.xls by importing into Excel. 
+And the column CDS_CODE was set to 'TEXT' format. 
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
 
@@ -50,9 +58,10 @@ primary key column.
 */
 %let inputDataset2DSN = grad16;
 %let inputDataset2URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad16.xlsx?raw=true
 ;
 %let inputDataset2Type = XLSX;
+
 
 /*
 [Dataset 3 Name] StaffAssign16
@@ -78,14 +87,15 @@ produced was then imported into Excel to produce file StaffAssign.xls
 [Data Dictionary] http://www.cde.ca.gov/ds/sd/sd/fsgradaf09.asp
 
 [Unique ID Schema] The columns "District Code" and "School Code" form a 
-composite key, which together are equivalent to the unique id column CDS_CODE in 
-dataset grad16 and grad17.
+composite key, which together are equivalent to the unique id column CDS_CODE 
+in dataset grad16 and grad17.
 */
 %let inputDataset3DSN = StaffAssign16;
 %let inputDataset3URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/StaffAssign16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssign16.xlsx?raw=true
 ;
 %let inputDataset3Type = XLSX;
+
 
 /*
 [Dataset 4 Name] enr16
@@ -98,7 +108,8 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/StaffAssign
 
 [Number of Features] 4
 
-[Data Source] The file http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
+[Data Source] The file 
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
 was downloaded, imported into R with all columns setting to Character class. As 
 not all the schools have a considerably large number of Grade 12 students, rows 
 with the value of column 'GR_12' less than 10 were removed. All the columns 
@@ -110,9 +121,10 @@ key column.
 */
 %let inputDataset4DSN = enr16;
 %let inputDataset4URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/enr16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xlsx?raw=true
 ;
 %let inputDataset4Type = XLSX;
+
 
 /* load raw datasets over the wire, if they doesn't already exist */
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
@@ -121,11 +133,11 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/enr16.xlsx?
     %put &=url;
     %put &=filetype;
     %if
-		/* to check they doesn't already exist */
+        /* to check they doesn't already exist */
         %sysfunc(exist(&dsn.)) = 0
     %then
         %do;
-			/* loading datasets over the line */
+            /* loading datasets over the line */
             %put Loading dataset &dsn. over the wire now...;
             filename
                 tempfile
@@ -159,12 +171,6 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/enr16.xlsx?
     %end;
 %mend;
 %loadDatasets
-
-
-
-
-
-
 
 proc sql;
     select *
