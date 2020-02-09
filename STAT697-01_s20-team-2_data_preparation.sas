@@ -214,8 +214,8 @@ proc sql;
 quit;
 
 
-* check grad16 for bad unique id values, where the columns COUNTY, DISTRICT, and
-* SCHOOL form a composite key;
+* check grad16 for bad unique id values, where the columns COUNTY, DISTRICT, and SCHOOL form a composite key;
+
 proc sql;
     /* check for duplicate unique id values; after executing this query, we see
     that grad16 contains now rows, so no mitigation is needed to ensure
@@ -256,8 +256,8 @@ proc sql;
     ;
 quit;
 
-* check grad17 for bad unique id values, where the column CDS_CODE is intended 
-* to be a primary key;
+* check grad17 for bad unique id values, where the column CDS_CODE is intended to be a primary key;
+
 proc sql;
     /* check for unique id values that are repeated, missing, or correspond to
     non-schools; after executing this query, we see that 
@@ -304,6 +304,43 @@ proc sql;
     ;
 quit;
 
+    /* We want to identify duplicates in the unique primary key CDS_CODE in
+    dataset grad17. */
+
+proc sql; 
+    create table grad17_clean as
+        select
+            CDS_CODE
+            ,COUNTY
+            ,HISPANIC
+            ,AM_IND
+            ,AFRICAN_AM
+            ,WHITE
+            ,TOTAL
+        from 
+            grad17
+        group by 
+            COUNTY
+    ;
+
+    /* It is too mundane to compare the graduation rate between all schools and
+    school districts in the State of California. Rather, we combine them by
+    County*/
+    create table grad17_county as
+        select
+            COUNTY
+            ,HISPANIC
+            ,AM_IND
+            ,AFRICAN_AM
+            ,WHITE
+            ,sum(TOTAL) as COUNTY_TOTAL
+        from grad17_clean
+        group by COUNTY
+    ;
+quit;
+
+*check enr16 for bad unique id values, and use summary function to create new columns by adding the value of the same column of multiple observation units which share the same unique id;
+
 proc sql;
     /* as one specific school goes with multiple rows of data with each row 
     representing an unique combination of ethnicity and gender, we need to check
@@ -334,6 +371,8 @@ proc sql;
             not(missing(CDS_Code))
     ;
 quit;
+
+**check StaffAssign16 for bad unique id values, and use summary function to create new columns by getting the average value of the same column of multiple observation units which share the same unique id;
 
 proc sql;
     /* As one row in staffassign16 represents one staff, the first thing we need
@@ -371,70 +410,8 @@ proc sql;
     ;
 quit;
 
+
 * inspect columns of interest in cleaned versions of datasets;
-
-title "Inspect total_number_of_GR12_Graduate in enr16_w3clean";
-proc sql;
-    select
-         min(total_number_of_GR12_Graduate) as min
-        ,max(total_number_of_GR12_Graduate) as max
-        ,mean(total_number_of_GR12_Graduate) as max
-        ,median(total_number_of_GR12_Graduate) as max
-        ,nmiss(total_number_of_GR12_Graduate) as missing
-    from
-        enr16_w3clean
-    ;
-quit;
-title;
-
-title "Inspect AvgEstimatedFTE in staffassign16_w3clean";
-proc sql;
-    select
-         min(AvgEstimatedFTE) as min
-        ,max(AvgEstimatedFTE) as max
-        ,mean(AvgEstimatedFTE) as max
-        ,median(AvgEstimatedFTE) as max
-        ,nmiss(AvgEstimatedFTE) as missing
-    from
-        staffassign16_w3clean
-    ;
-quit;
-title;
-
-
-
-/* We want to identify duplicates in the unique primary key CDS_CODE in dataset grad17. */
-
-
-proc sql; 
-    create table grad17_clean as
-        select
-            CDS_CODE
-            ,COUNTY
-            ,HISPANIC
-            ,AM_IND
-            ,AFRICAN_AM
-            ,WHITE
-            ,TOTAL
-        from 
-            grad17
-        group by 
-            COUNTY
-    ;
-
-/* It is too mundane to compare the graduation rate between all schools and school districts in the State of California. Rather, we combine them by County */
-    create table grad17_county as
-        select
-            COUNTY
-            ,HISPANIC
-            ,AM_IND
-            ,AFRICAN_AM
-            ,WHITE
-            ,sum(TOTAL) as COUNTY_TOTAL
-        from grad17_clean
-        group by COUNTY
-    ;
-quit;
 
 title "Inspect Percent_Graduation_by_Race in grad1617";
 proc sql;
@@ -460,6 +437,34 @@ proc sql;
         ,nmiss(Percent_Graduation_by_Race) as missing
     from
         grad1516
+    ;
+quit;
+title;
+
+title "Inspect total_number_of_GR12_Graduate in enr16_w3clean";
+proc sql;
+    select
+         min(total_number_of_GR12_Graduate) as min
+        ,max(total_number_of_GR12_Graduate) as max
+        ,mean(total_number_of_GR12_Graduate) as max
+        ,median(total_number_of_GR12_Graduate) as max
+        ,nmiss(total_number_of_GR12_Graduate) as missing
+    from
+        enr16_w3clean
+    ;
+quit;
+title;
+
+title "Inspect AvgEstimatedFTE in staffassign16_w3clean";
+proc sql;
+    select
+         min(AvgEstimatedFTE) as min
+        ,max(AvgEstimatedFTE) as max
+        ,mean(AvgEstimatedFTE) as max
+        ,median(AvgEstimatedFTE) as max
+        ,nmiss(AvgEstimatedFTE) as missing
+    from
+        staffassign16_w3clean
     ;
 quit;
 title;
