@@ -21,7 +21,8 @@ Note: This needs to get the average of the column 'Estimated FTE' for all the
 observation units with the same input on the column 'DistrictCode' from 
 StaffAssign16.
 
-Limitations: Missing and incomplete data are omitted. And the results of different school districts could be of little difference. 
+Limitations: Missing and incomplete data are omitted. And the results of 
+different school districts could be of little difference. 
 */
 
 
@@ -42,7 +43,10 @@ by the value of column 'Total' of the observation units with the same SchoolCode
 in the dataset grad17, then get the average of these results from observation 
 units with the same district code.
 
-Limitations: Missing and incomplete data are omitted. And the 'Total' column in the grad17 dataset might not be best possible denonminator of the ratio as it does not include students with high school equivalencies. And the results from different school districts could be of little difference. 
+Limitations: Missing and incomplete data are omitted. And the 'Total' column in
+the grad17 dataset might not be best possible denonminator of the ratio as it
+does not include students with high school equivalencies. And the results from
+different school districts could be of little difference. 
 */
 
 
@@ -58,5 +62,8 @@ associated with the percentage of students meeting university requirements.
 
 Note: This needs to compare the result of the above two questions.
 
-Limitations: The comparison between the rankings produced by the previous two questions could be preliminary. And the overlap could be caused by other confounding factors, in this case the overlap cannot indicate there is any association.
+Limitations: The comparison between the rankings produced by the previous two
+questions could be preliminary. And the overlap could be caused by other 
+confounding factors, in this case the overlap cannot indicate there is any
+association.
 */
