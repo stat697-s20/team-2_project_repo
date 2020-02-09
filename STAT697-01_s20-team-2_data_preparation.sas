@@ -214,7 +214,8 @@ proc sql;
 quit;
 
 
-* check grad16 for bad unique id values, where the columns COUNTY, DISTRICT, and SCHOOL form a composite key;
+* check grad16 for bad unique id values, where the columns COUNTY, DISTRICT, and 
+SCHOOL form a composite key;
 
 proc sql;
     /* check for duplicate unique id values; after executing this query, we see
@@ -256,7 +257,8 @@ proc sql;
     ;
 quit;
 
-* check grad17 for bad unique id values, where the column CDS_CODE is intended to be a primary key;
+* check grad17 for bad unique id values, where the column CDS_CODE is intended 
+to be a primary key;
 
 proc sql;
     /* check for unique id values that are repeated, missing, or correspond to
@@ -339,7 +341,9 @@ proc sql;
     ;
 quit;
 
-*check enr16 for bad unique id values, and use summary function to create new columns by adding the value of the same column of multiple observation units which share the same unique id;
+*check enr16 for bad unique id values, and use summary function to create new
+columns by adding the value of the same column of multiple observation units 
+which share the same unique id;
 
 proc sql;
     /* as one specific school goes with multiple rows of data with each row 
@@ -372,7 +376,9 @@ proc sql;
     ;
 quit;
 
-**check StaffAssign16 for bad unique id values, and use summary function to create new columns by getting the average value of the same column of multiple observation units which share the same unique id;
+* check StaffAssign16 for bad unique id values, and use summary function to 
+create new columns by getting the average value of the same column of multiple 
+observation units which share the same unique id;
 
 proc sql;
     /* As one row in staffassign16 represents one staff, the first thing we need
