@@ -116,6 +116,7 @@ with the value of column 'GR_12' less than 10 were removed. All the columns
 except 'CDS_CODE', 'ETHNIC', 'GENDER' and 'GR_12' were removed.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
+
 [Unique ID Schema] The unique id column CDS_CODE in dataset enr16 is the primary 
 key column.
 */
@@ -172,9 +173,111 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %mend;
 %loadDatasets
 
+
+proc sql;
+    /* as one specific school goes with multiple rows of data with each row 
+    representing an unique combination of ethnicity and gender, we need to check
+    for duplcate unique id values and combine the value of column 'GR_12' of 
+    rows of data that share the same unique id value - CDS_code. After exeuting 
+    this query, we see there are 1977 rows and 2 columns, and the table 
+    enr16_addsup will have no duplicated unique id values. */
+    create table enr16_addsup as
+        select
+             CDS_Code
+            ,sum(GR_12) as total_number_of_GR12_Graduate
+        from
+            enr16
+        group by
+             CDS_Code
+    ;
+    /* remove rows with missing unique id components. After executing this
+    query, the table enr16_w3clean generated still has 1977 rows, which means no
+    missing value of CDS_Code here */
+    create table enr16_w3clean as
+        select
+             CDS_Code
+            ,total_number_of_GR12_Graduate
+        from
+            enr16_addsup
+        where
+             /* remove rows with missing unique id value components */
+            not(missing(CDS_Code))
+    ;
+quit;
+
+proc sql;
+    /* As one row in staffassign16 represents one staff, the first thing we need
+    to do is to get the average value of Column EstimatedFTE of rows sharing the
+    same composite keys formed by column DistrictCode and SchoolCode. After 
+    executing this query, there are 7680 rows and 3 columns in the newly-
+    generated table staffassign16_average*/
+    create table staffassign16_average as
+        select
+             DistrictCode
+            ,Schoolcode
+            ,avg(EstimatedFTE) as AvgEstimatedFTE
+        from
+            StaffAssign16
+        group by
+            DistrictCode
+            ,Schoolcode            
+    ;
+    /* remove rows with missing unique id components. After executing this 
+    query, the table staffassign16_w3clean generated still has 7680 rows, which
+    means no missing value of DistrictCode or Schoolcode here */
+    create table staffassign16_w3clean as
+        select
+             cats(DistrictCode, Schoolcode) as CDS_Code
+            ,DistrictCode
+            ,Schoolcode
+            ,AvgEstimatedFTE
+        from
+            staffassign16_average
+        where
+             /* remove rows with missing unique id value components */
+            not(missing(DistrictCode))
+            and
+            not(missing(Schoolcode))
+    ;
+quit;
+
+* inspect columns of interest in cleaned versions of datasets;
+
+title "Inspect total_number_of_GR12_Graduate in enr16_w3clean";
+proc sql;
+    select
+         min(total_number_of_GR12_Graduate) as min
+        ,max(total_number_of_GR12_Graduate) as max
+        ,mean(total_number_of_GR12_Graduate) as max
+        ,median(total_number_of_GR12_Graduate) as max
+        ,nmiss(total_number_of_GR12_Graduate) as missing
+    from
+        enr16_w3clean
+    ;
+quit;
+title;
+
+title "Inspect AvgEstimatedFTE in staffassign16_w3clean";
+proc sql;
+    select
+         min(AvgEstimatedFTE) as min
+        ,max(AvgEstimatedFTE) as max
+        ,mean(AvgEstimatedFTE) as max
+        ,median(AvgEstimatedFTE) as max
+        ,nmiss(AvgEstimatedFTE) as missing
+    from
+        staffassign16_w3clean
+    ;
+quit;
+title;
+
+/* using the TABLES dictionary table view to get detailed list of files we've
+generated above*/
 proc sql;
     select *
     from dictionary.tables
+     /* As TABLES dictionary table produces a large amount of information, here
+    we need to specify in the where clause*/
     where libname = 'WORK'
     order by memname;
 quit;
