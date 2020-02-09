@@ -23,7 +23,7 @@ primary key column.
 */
 %let inputDataset1DSN = grad17;
 %let inputDataset1URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad17.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad17.xlsx?raw=true
 ;
 %let inputDataset1Type = XLSX;
 
@@ -50,7 +50,7 @@ primary key column.
 */
 %let inputDataset2DSN = grad16;
 %let inputDataset2URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/grad16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad16.xlsx?raw=true
 ;
 %let inputDataset2Type = XLSX;
 
@@ -83,7 +83,7 @@ dataset grad16 and grad17.
 */
 %let inputDataset3DSN = StaffAssign16;
 %let inputDataset3URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/StaffAssign16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssign16.xlsx?raw=true
 ;
 %let inputDataset3Type = XLSX;
 
@@ -110,7 +110,7 @@ key column.
 */
 %let inputDataset4DSN = enr16;
 %let inputDataset4URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/FEB1/data/enr16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xlsx?raw=true
 ;
 %let inputDataset4Type = XLSX;
 
