@@ -4,7 +4,7 @@
 *******************************************************************************;
 
 /*
-[Dataset 1 Name] grad17
+[Dataset 1 Name] gradaf17
 
 [Dataset Description] Graduates meeting University of California (UC)/California 
 State University (CSU) entrance requirements by racial/ethnic group and school, 
@@ -17,24 +17,24 @@ AY2016-17
 [Number of Features] 15
 
 [Data Source] The file 
-http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=GradEth&cPage=filesgrad.asp 
-was downloaded and edited to produce file grad17.xls by importing into Excel. 
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=UCGradEth&cPage=filesgradaf.asp 
+was downloaded and edited to produce file gradaf17.xls by importing into Excel. 
 And the column CDS_CODE was set to 'TEXT' format.
 
-[Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
+[Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgradaf09.asp
 
-[Unique ID Schema] The unique id column CDS_CODE in dataset grad17 is the 
+[Unique ID Schema] The unique id column CDS_CODE in dataset gradaf17 is the 
 primary key column.
 */
-%let inputDataset1DSN = grad17;
+%let inputDataset1DSN = gradaf17;
 %let inputDataset1URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad17.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/gradaf17.xlsx?raw=true
 ;
 %let inputDataset1Type = XLSX;
 
 
 /*
-[Dataset 2 Name] grad16
+[Dataset 2 Name] gradaf16
 
 [Dataset Description] SGraduates meeting University of California (UC)/
 California State University (CSU) entrance requirements by racial/ethnic group 
@@ -42,23 +42,23 @@ and school, AY2015-16
 
 [Experimental Unit Description] California public K-12 schools in AY2015-16
 
-[Number of Observations] 2,521
+[Number of Observations] 2,522
 
 [Number of Features] 15
 
 [Data Source] The file 
-http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=GradEth&cPage=filesgrad.asp 
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=UCGradEth&cPage=filesgradaf.asp
 was downloaded and edited to produce file grad16.xls by importing into Excel. 
 And the column CDS_CODE was set to 'TEXT' format. 
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
 
-[Unique ID Schema] The unique id column CDS_CODE in dataset grad16 is the 
+[Unique ID Schema] The unique id column CDS_CODE in dataset gradaf16 is the 
 primary key column.
 */
-%let inputDataset2DSN = grad16;
+%let inputDataset2DSN = gradaf16;
 %let inputDataset2URL =
-https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/grad16.xlsx?raw=true
+https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/gradaf16.xlsx?raw=true
 ;
 %let inputDataset2Type = XLSX;
 
