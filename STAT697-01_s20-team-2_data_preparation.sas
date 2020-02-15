@@ -457,9 +457,15 @@ proc sql;
     ;
      
         
-/* check analytic_file_raw for rows whose unique id values are repeated,
-missing, or correspond to non-schools, where the column COUNTY is intended
-to be a primary key */
+/* check analytic_file_raw for rows whose unique id values are repeated or 
+missing, where the column COUNTY is intended to be a primary key; after 
+executing this data step, we see that there is no missing or repeated value, the new table generated has the same number of observations units as the original table. */
+proc sql;
+    create table analytic_file_raw_checked as
+        select distinct COUNTY
+        from analytic_file_raw
+        where not(missing(COUNTY))
+;
 
 
 /* using the TABLES dictionary table view to get detailed list of files we've
