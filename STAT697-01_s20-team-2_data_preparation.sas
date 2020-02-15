@@ -262,6 +262,7 @@ proc sql;
     ;
 quit;
 
+
 /*check gradaf17 for bad unique id values, where the column CDS_CODE is intended 
 to be a primary key*/
 proc sql;
@@ -310,6 +311,7 @@ proc sql;
     ;
 quit;
 
+
 /* We want to identify duplicates in the unique primary key CDS_CODE in dataset
 gradaf17. */
 proc sql; 
@@ -340,6 +342,7 @@ proc sql;
         group by COUNTY
     ;
 quit;
+
 
 /*check enr16 for bad unique id values, and use summary function to create new
 columns by adding the value of the same column of multiple observation units 
@@ -376,6 +379,7 @@ proc sql;
             not(missing(CDS_Code))
     ;
 quit;
+
 
 /* check StaffAssign16 for bad unique id values, and use summary function to 
 create new columns by getting the average value of the same column of multiple 
@@ -453,6 +457,10 @@ proc sql;
     ;
      
         
+/* check analytic_file_raw for rows whose unique id values are repeated,
+missing, or correspond to non-schools, where the column COUNTY is intended
+to be a primary key */
+
 
 /* using the TABLES dictionary table view to get detailed list of files we've
 generated above by printing the names of all tables/datasets*/
