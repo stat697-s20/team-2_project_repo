@@ -410,9 +410,17 @@ proc sql;
 quit;
 
 
-/* build analytic dataset from raw datasets imported above, including only the
-columns and minimal data-cleaning/transformation needed to address each
-research questions/objectives in data-analysis files */
+/* The analytic dataset is built here.
+YX: Three tables are needed for my part of data analysis. When the CDS_CODE 
+column and COUNTY column from table gradaf17 and enr16 were both matching, I 
+understood that they are talking about the same school, and used the number of 
+Grade 12 enrollment from enr16 as the denominator and the number of students 
+meeting CSU/UC University requirements as the numerator to calculate a ratio. 
+Then I grouped the join table by county and calcuated the average ratio of each 
+county group. Finally I joined the table newly generated and the pre-processed 
+table staffassign16 using the countyname as the unique id, thus I would be able 
+to compare the average ratio between university eligibility and Grade 12 total 
+enrollment per county, and the average value of Estimated FTE per county.*/
 proc sql;
     create table analytic_file_raw as
         select 
