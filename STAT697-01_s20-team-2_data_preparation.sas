@@ -413,66 +413,13 @@ proc sql;
 quit;
 
 
-/*inspect columns of interest in cleaned versions of datasets*/
-title "Inspect Percent_Graduation_by_Race in gradaf1617";
-proc sql;
-    select
-        min(Percent_Graduation_by_Race) as min
-        ,max(Percent_Graduation_by_Race) as max
-        ,mean(Percent_Graduation_by_Race) as max
-        ,median(Percent_Graduation_by_Race) as max
-        ,nmiss(Percent_Graduation_by_Race) as missing
-    from
-        gradaf1617
-    ;
-quit;
-title;
-
-title "Inspect Percent_Graduation_by_Race in gradaf1516";
-proc sql;
-    select
-         min(Percent_Graduation_by_Race) as min
-        ,max(Percent_Graduation_by_Race) as max
-        ,mean(Percent_Graduation_by_Race) as max
-        ,median(Percent_Graduation_by_Race) as max
-        ,nmiss(Percent_Graduation_by_Race) as missing
-    from
-        gradaf1516
-    ;
-quit;
-title;
-
-title "Inspect total_number_of_GR12_Graduate in enr16_w3clean";
-proc sql;
-    select
-         min(total_number_of_GR12_Graduate) as min
-        ,max(total_number_of_GR12_Graduate) as max
-        ,mean(total_number_of_GR12_Graduate) as max
-        ,median(total_number_of_GR12_Graduate) as max
-        ,nmiss(total_number_of_GR12_Graduate) as missing
-    from
-        enr16_w3clean
-    ;
-quit;
-title;
-
-title "Inspect AvgEstimatedFTE in staffassign16_w3clean";
-proc sql;
-    select
-         min(AvgEstimatedFTE) as min
-        ,max(AvgEstimatedFTE) as max
-        ,mean(AvgEstimatedFTE) as max
-        ,median(AvgEstimatedFTE) as max
-        ,nmiss(AvgEstimatedFTE) as missing
-    from
-        staffassign16_w3clean
-    ;
-quit;
-title;
+/* build analytic dataset from raw datasets imported above, including only the
+columns and minimal data-cleaning/transformation needed to address each
+research questions/objectives in data-analysis files */
 
 
 /* using the TABLES dictionary table view to get detailed list of files we've
-generated above*/
+generated above by printing the names of all tables/datasets*/
 proc sql;
     select *
     from dictionary.tables

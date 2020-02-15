@@ -40,11 +40,11 @@ students meeting UC/CSU requirements.
 Note: This needs to find out observation units with column 'GR_12' not equal to 
 zero in the dataset enr16, and divide their number of Grade twelve enrollments 
 by the value of column 'Total' of the observation units with the same SchoolCode 
-in the dataset grad17, then get the average of these results from observation 
+in the dataset gradaf17, then get the average of these results from observation 
 units with the same district code.
 
 Limitations: Missing and incomplete data are omitted. And the 'Total' column in
-the grad17 dataset might not be best possible denonminator of the ratio as it
+the gradaf17 dataset might not be best possible denonminator of the ratio as it
 does not include students with high school equivalencies. And the results from
 different school districts could be of little difference. 
 */
