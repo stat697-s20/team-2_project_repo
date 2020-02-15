@@ -174,9 +174,11 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %loadDatasets
 
 
+/* check gradaf17 for bad unique id values, where the columns COUNTY, DISTRICT, 
+and SCHOOL form a composite key*/
 proc sql;
-    /* check for duplicate unique id values; after executing this query, we see
-    that gradaf17_raw_dups has no missing unique id component */
+    /* check gradaf17 for duplicate unique id values; after executing this 
+    query, we see that gradaf17_raw_dups has no missing unique id component */
     create table gradaf17_raw_dups as
         select
             COUNTY
@@ -194,8 +196,8 @@ proc sql;
     ;
     /* remove rows with missing unique id components, or with unique ids that do 
     not correspond to schools; after executing this query, the new dataset from
-    gradaf1617 will have no duplicate/repeated unique id values, and all unique id
-    values will correspond to our experimental units of interest, which are
+    gradaf1617 will have no duplicate/repeated unique id values, and all unique
+    id values will correspond to our experimental units of interest, which are
     California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
     SCHOOL in gradaf1617 are guaranteed to form a composite key */
     create table gradaf1617 as
@@ -214,8 +216,8 @@ proc sql;
 quit;
 
 
-* check gradaf16 for bad unique id values, where the columns COUNTY, DISTRICT, and 
-SCHOOL form a composite key;
+/* check gradaf16 for bad unique id values, where the columns COUNTY, DISTRICT, 
+and SCHOOL form a composite key*/
 proc sql;
     /* check for duplicate unique id values; after executing this query, we see
     that gradaf16 contains now rows, so no mitigation is needed to ensure
@@ -237,8 +239,8 @@ proc sql;
     ;
     /* remove rows with missing unique id components, or iwht unique ids that do
     not correspond to schools; after executing this query, the new dataset 
-    gradaf1516 will have no duplicate/repeated unique id values, and all unique id
-    values will correspond to our experimental units of interest, which are 
+    gradaf1516 will have no duplicate/repeated unique id values, and all unique 
+    id values will correspond to our experimental units of interest, which are 
     California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
     SCHOOL in gradaf1516 are guaranteed to form a composite key */
     create table gradaf1516 as
@@ -256,14 +258,14 @@ proc sql;
     ;
 quit;
 
-* check gradaf17 for bad unique id values, where the column CDS_CODE is intended 
-to be a primary key;
+/*check gradaf17 for bad unique id values, where the column CDS_CODE is intended 
+to be a primary key*/
 proc sql;
     /* check for unique id values that are repeated, missing, or correspond to
     non-schools; after executing this query, we see that 
-    gradaf17_raw_bad_unique_ids only has no-school values of CDS_CODE that need to 
-    be removed. The query below allows us to build a fit-for-purpose mitigation 
-    step with no guessing or unnecessary effort */
+    gradaf17_raw_bad_unique_ids only has no-school values of CDS_CODE that need
+    to be removed. The query below allows us to build a fit-for-purpose 
+    mitigation step with no guessing or unnecessary effort */
     create table gradaf17_raw_bad_unique_ids as
         select
             A.*
@@ -304,8 +306,8 @@ proc sql;
     ;
 quit;
 
-    /* We want to identify duplicates in the unique primary key CDS_CODE in
-    dataset gradaf17. */
+/* We want to identify duplicates in the unique primary key CDS_CODE in dataset
+gradaf17. */
 proc sql; 
     create table gradaf17_clean as
         select
@@ -321,7 +323,6 @@ proc sql;
         group by 
             COUNTY
     ;
-
     /* It is too mundane to compare the graduation rate between all schools and
     school districts in the State of California. Rather, we combine them by
     County*/
@@ -338,9 +339,9 @@ proc sql;
     ;
 quit;
 
-*check enr16 for bad unique id values, and use summary function to create new
+/*check enr16 for bad unique id values, and use summary function to create new
 columns by adding the value of the same column of multiple observation units 
-which share the same unique id;
+which share the same unique id*/
 proc sql;
     /* as one specific school goes with multiple rows of data with each row 
     representing an unique combination of ethnicity and gender, we need to check
@@ -372,9 +373,9 @@ proc sql;
     ;
 quit;
 
-* check StaffAssign16 for bad unique id values, and use summary function to 
+/* check StaffAssign16 for bad unique id values, and use summary function to 
 create new columns by getting the average value of the same column of multiple 
-observation units which share the same unique id;
+observation units which share the same unique id*/
 proc sql;
     /* As one row in staffassign16 represents one staff, the first thing we need
     to do is to get the average value of Column EstimatedFTE of rows sharing the
@@ -412,8 +413,7 @@ proc sql;
 quit;
 
 
-* inspect columns of interest in cleaned versions of datasets;
-
+/*inspect columns of interest in cleaned versions of datasets*/
 title "Inspect Percent_Graduation_by_Race in gradaf1617";
 proc sql;
     select
