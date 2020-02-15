@@ -30,7 +30,7 @@ different counties could be of little difference.
 * Research Question 2 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 2 of 3: What are the top thirty counties that have the highest 
+Question 2 of 3: What are the top ten counties that have the highest 
 percentage of graduates meeting UC/CSU entrance requirement out of all the 
 students enrolled into Grade twelve? 
 
