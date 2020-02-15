@@ -18,7 +18,7 @@ AY2016-17
 
 [Data Source] The file 
 http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=UCGradEth&cPage=filesgradaf.asp 
-was downloaded and edited to produce file gradaf17.xls by importing into Excel. 
+was downloaded and edited to produce file gradaf17.xlsx by importing into Excel. 
 And the column CDS_CODE was set to 'TEXT' format.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgradaf09.asp
@@ -48,7 +48,7 @@ and school, AY2015-16
 
 [Data Source] The file 
 http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2015-16&cCat=UCGradEth&cPage=filesgradaf.asp
-was downloaded and edited to produce file gradaf16.xls by importing into Excel. 
+was downloaded and edited to produce file gradaf16.xlsx by importing into Excel. 
 And the column CDS_CODE was set to 'TEXT' format. 
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsgrad09.asp
@@ -72,23 +72,23 @@ certificated teachers, administrators, and pupil services personnel, AY2016-17
 [Experimental Unit Description] K-12 California public education certificated 
 teachers, administrators, and pupil services personnel, AY2016-17
 
-[Number of Observations] 40,000
+[Number of Observations] 100,000
 
-[Number of Features] 5
+[Number of Features] 2
 
 [Data Source] The file
 http://www3.cde.ca.gov/download/dq/StaffAssign16.zip
-was downloaded, imported into R with all columns setting to Character class. To 
-make the file less than 5MB, 40000 rows were picked out of all the observation 
-units randomly , and all the columns except 'DistrictCode', 'SchoolCode', 
-'StaffType', 'EstimatedFTE' and 'File Created' were removed. The R dateframe 
-produced was then imported into Excel to produce file StaffAssign.xls 
+was downloaded, imported into R for further editting followed by being exported 
+as StaffAssign16.xlsx. To make the file less than 5MB, 100000 rows were picked 
+out of all the observation units randomly , and all the columns except
+'CountyName' and 'EstimatedFTE' were removed. The R dateframe produced was then 
+imported into Excel to produce file StaffAssign16.xlsx 
 
 [Data Dictionary] http://www.cde.ca.gov/ds/sd/sd/fsgradaf09.asp
 
 [Unique ID Schema] The columns "District Code" and "School Code" form a 
 composite key, which together are equivalent to the unique id column CDS_CODE 
-in dataset gradaf16 and gradaf17.
+in dataset gradaf16 and gradaf17. However, in our research the column 'CountyName' would be used to combine this table with other tables.
 */
 %let inputDataset3DSN = StaffAssign16;
 %let inputDataset3URL =
@@ -106,14 +106,14 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssi
 
 [Number of Observations] 8239
 
-[Number of Features] 4
+[Number of Features] 3
 
 [Data Source] The file 
 http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
-was downloaded, imported into R with all columns setting to Character class. As 
-not all the schools have a considerably large number of Grade 12 students, rows 
-with the value of column 'GR_12' less than 10 were removed. All the columns 
-except 'CDS_CODE', 'ETHNIC', 'GENDER' and 'GR_12' were removed.
+was downloaded, imported into R for further editting followed by being exported 
+as enr16.xlsx. As not all the schools have a considerably large number of Grade 
+12 students, rows with the value of column 'GR_12' less than 10 were removed. 
+All the columns except 'CDS_CODE', 'COUNTY' and 'GR_12' were removed.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
 

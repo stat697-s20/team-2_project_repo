@@ -17,7 +17,7 @@ average Estimated FTE?
 Rationale: This would help identify counties with high level of average 
 Estimated FTE.
 
-Note: This needs to get the average of the column 'Estimated FTE' for all the 
+Note: This needs to get the average of the column 'EstimatedFTE' for all the 
 observation units with the same input on the column 'CountyName' from 
 StaffAssign16.
 
@@ -39,7 +39,7 @@ students meeting UC/CSU requirements.
 
 Note: This needs to find out observation units with column 'GR_12' not equal to 
 zero in the dataset enr16, and divide their number of Grade twelve enrollments 
-by the value of column 'Total' of the observation units with the same SchoolCode 
+by the value of column 'TOTAL' of the observation units with the same SchoolCode 
 in the dataset gradaf17, then get the average of these results from observation 
 units with the same name of county.
 
