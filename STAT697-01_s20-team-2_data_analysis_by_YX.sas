@@ -18,7 +18,7 @@ Rationale: This would help identify counties with high level of average
 Estimated FTE.
 
 Note: This needs to get the average of the column 'Estimated FTE' for all the 
-observation units with the same input on the column 'DistrictCode' from 
+observation units with the same input on the column 'CountyName' from 
 StaffAssign16.
 
 Limitations: Missing and incomplete data are omitted. And the results of 
@@ -41,7 +41,7 @@ Note: This needs to find out observation units with column 'GR_12' not equal to
 zero in the dataset enr16, and divide their number of Grade twelve enrollments 
 by the value of column 'Total' of the observation units with the same SchoolCode 
 in the dataset gradaf17, then get the average of these results from observation 
-units with the same district code.
+units with the same name of county.
 
 Limitations: Missing and incomplete data are omitted. And the 'Total' column in
 the gradaf17 dataset might not be best possible denonminator of the ratio as it
