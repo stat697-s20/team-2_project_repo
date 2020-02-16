@@ -109,11 +109,11 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssi
 [Number of Features] 3
 
 [Data Source] The file 
-http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
-was downloaded, imported into R for further editting followed by being exported 
-as enr16.xlsx. As not all the schools have a considerably large number of Grade 
-12 students, rows with the value of column 'GR_12' less than 10 were removed. 
-All the columns except 'CDS_CODE', 'COUNTY' and 'GR_12' were removed.
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp was downloaded, imported into R for 
+further editting followed by being exported as enr16.xlsx. The column CDS_CODE 
+was set to 'TEXT' format. As not all the schools have a considerably large 
+number of Grade 12 students, rows with the value of column 'GR_12' less than 10 
+were removed.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
 
