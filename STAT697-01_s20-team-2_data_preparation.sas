@@ -88,7 +88,8 @@ imported into Excel to produce file StaffAssign16.xlsx
 
 [Unique ID Schema] The columns "District Code" and "School Code" form a 
 composite key, which together are equivalent to the unique id column CDS_CODE 
-in dataset gradaf16 and gradaf17. However, in our research the column 'CountyName' would be used to combine this table with other tables.
+in dataset gradaf16 and gradaf17. However, in our research the column 
+'CountyName' would be used to combine this table with other tables.
 */
 %let inputDataset3DSN = StaffAssign16;
 %let inputDataset3URL =
@@ -109,11 +110,11 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssi
 [Number of Features] 23
 
 [Data Source] The file 
-http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp was downloaded, imported into R for 
-further editting followed by being exported as enr16.xlsx. The column CDS_CODE 
-was set to 'TEXT' format. As not all the schools have a considerably large 
-number of Grade 12 students, rows with the value of column 'GR_12' less than 10 
-were removed.
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp 
+was downloaded, imported into R for further editting followed by being exported 
+as enr16.xlsx. The column CDS_CODE was set to 'TEXT' format. As not all the 
+schools have a considerably large number of Grade 12 students, rows with the 
+value of column 'GR_12' less than 10 were removed.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
 
@@ -129,7 +130,7 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 
 /* load raw datasets over the wire, if they doesn't already exist */
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
-    /*input the macro variables of the dsn, url and dataset file type*/
+    /* input the macro variables of the dsn, url and dataset file type */
     %put &=dsn;
     %put &=url;
     %put &=filetype;
@@ -175,7 +176,7 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 
 
 /* check gradaf17 for bad unique id values, where the columns COUNTY, DISTRICT, 
-and SCHOOL form a composite key*/
+and SCHOOL form a composite key */
 proc sql;
     /* check gradaf17 for duplicate unique id values; after executing this 
     query, we see that gradaf17_raw_dups has no missing unique id component */
@@ -219,7 +220,7 @@ quit;
 
 
 /* check gradaf16 for bad unique id values, where the columns COUNTY, DISTRICT, 
-and SCHOOL form a composite key*/
+and SCHOOL form a composite key */
 proc sql;
     /* check for duplicate unique id values; after executing this query, we see
     that gradaf16 contains no rows, so no mitigation is needed to ensure
@@ -263,8 +264,8 @@ proc sql;
 quit;
 
 
-/*check gradaf17 for bad unique id values, where the column CDS_CODE is intended 
-to be a primary key*/
+/* check gradaf17 for bad unique id values, where the column CDS_CODE is 
+intended to be a primary key */
 proc sql;
     /* check for unique id values that are repeated, missing, or correspond to
     non-schools; after executing this query, we see that 
@@ -288,7 +289,7 @@ proc sql;
             ) as B
             on A.CDS_CODE=B.CDS_CODE
         having
-            /*capture rows corresponding to repeated primary key values */
+            /* capture rows corresponding to repeated primary key values */
             row_count_for_unique_id_value > 1
             or
             /* capture rows corresponding to missing primary key values */
@@ -313,7 +314,7 @@ quit;
 
 
 /* We want to identify duplicates in the unique primary key CDS_CODE in dataset
-gradaf17. */
+gradaf17 */
 proc sql; 
     create table gradaf17_clean as
         select
@@ -329,7 +330,7 @@ proc sql;
     ;
     /* It is too mundane to compare the graduation rate between all schools and
     school districts in the State of California. Rather, we combine them by
-    County*/
+    County */
     create table gradaf17_county as
         select
             COUNTY
@@ -344,9 +345,9 @@ proc sql;
 quit;
 
 
-/*check enr16 for bad unique id values, and use summary function to create new
+/* check enr16 for bad unique id values, and use summary function to create new
 columns by adding the value of the same column of multiple observation units 
-which share the same unique id*/
+which share the same unique id */
 proc sql;
     /* as one specific school goes with multiple rows of data with each row 
     representing an unique combination of ethnicity and gender, we need to check
@@ -383,13 +384,13 @@ quit;
 
 /* check StaffAssign16 for bad unique id values, and use summary function to 
 create new columns by getting the average value of the same column of multiple 
-observation units which share the same unique id*/
+observation units which share the same unique id */
 proc sql;
     /* As one row in staffassign16 represents one staff, the first thing we need
     to do is to get the average value of Column EstimatedFTE of rows sharing the
     same composite keys formed by column DistrictCode and SchoolCode. After 
     executing this query, there are 7680 rows and 3 columns in the newly-
-    generated table staffassign16_average*/
+    generated table staffassign16_average */
     create table staffassign16_average as
         select
             CountyName
@@ -424,7 +425,7 @@ Then I grouped the join table by county and calcuated the average ratio of each
 county group. Finally I joined the table newly generated and the pre-processed 
 table staffassign16 using the countyname as the unique id, thus I would be able 
 to compare the average ratio between university eligibility and Grade 12 total 
-enrollment per county, and the average value of Estimated FTE per county.*/
+enrollment per county, and the average value of Estimated FTE per county. */
 proc sql;
     create table analytic_file_raw as
         select 
@@ -446,7 +447,7 @@ proc sql;
                 enr16_w3clean as enr
                 , gradaf17_clean as gradaf17
             where
-                /*Both the county name and the cds_code need to match*/
+                /* Both the county name and the cds_code need to match */
                 enr.COUNTY = gradaf17.COUNTY
                 and enr.CDS_CODE = gradaf17.CDS_CODE
             group by
@@ -460,7 +461,9 @@ quit;
         
 /* check analytic_file_raw for rows whose unique id values are repeated or 
 missing, where the column COUNTY is intended to be a primary key; after 
-executing this data step, we see that there is no missing or repeated value, the new table generated has the same number of observations units as the original table. */
+executing this data step, we see that there is no missing or repeated value, the 
+new table generated has the same number of observations units as the original 
+table. */
 proc sql;
     create table analytic_file_raw_checked as
         select 
@@ -474,12 +477,12 @@ quit;
 
 
 /* using the TABLES dictionary table view to get detailed list of files we've
-generated above by printing the names of all tables/datasets*/
+generated above by printing the names of all tables/datasets */
 proc sql;
     select *
     from dictionary.tables
      /* As TABLES dictionary table produces a large amount of information, here
-    we need to specify in the where clause*/
+    we need to specify in the where clause */
     where libname = 'WORK'
     order by memname;
 quit;
