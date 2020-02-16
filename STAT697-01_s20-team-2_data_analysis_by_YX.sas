@@ -42,12 +42,12 @@ quit;
 * Research Question 2 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 2 of 3: What are the top ten counties that have the highest 
-percentage of graduates meeting UC/CSU entrance requirement out of all the 
-students enrolled into Grade twelve? 
+Question 2 of 3: What are the top ten counties that have the highest percentage
+of graduates meeting UC/CSU entrance requirement out of all the students
+enrolled into Grade twelve? 
 
-Rationale: This would help identify countiess with high percentage of 
-students meeting UC/CSU requirements.
+Rationale: This would help identify counties with high percentage of students 
+meeting UC/CSU requirements.
 
 Note: This needs to find out observation units with column 'GR_12' not equal to 
 zero in the dataset enr16, and divide their number of Grade twelve enrollments 
@@ -92,5 +92,5 @@ confounding factors, in this case the overlap cannot indicate there is any
 association.
 */
 
-/*YX: No code needed here for now as this question is basically the exploration 
-and discussion based upon the results of the first two questions.*/
+/* YX: No code needed here for now as this question is basically the exploration 
+and discussion based upon the results of the first two questions. */
