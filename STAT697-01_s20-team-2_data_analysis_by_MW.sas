@@ -18,7 +18,7 @@ Rationale: This can help identify the difference in the average graduation rate
 between the school years.
 
 Note: The rows are organized by the school district and county names, and we 
-will be able to join `grad16` and `grad17` and compare the average graduation 
+will be able to join `gradaf16` and `gradaf17` and compare the average graduation 
 rate. From the Exploratory Data Analysis (EPA), the primary key CDS_CODE between 
 2015-2016 and 2016-2017 are different. Rather than using the SCHOOL as 
 experimental unit, it may be more consistent to assign DISTRICT or COUNTY as 
@@ -48,7 +48,7 @@ Limitations: Nonresponse in the gender column is omitted. Not enough information
 to know about the nonrespondents. Based on the Exploratory Data Analysis, the
 gender of students was not provided in this subset of data. We may need to check
 back to the database to find and select the dataset with pertaining information
-about gender. The grad16 and grad17 datasets we gathered are insufficient to 
+about gender. The gradaf16 and gradaf17 datasets we gathered are insufficient to 
 answer this research question.
 */
 
@@ -70,7 +70,7 @@ interesting to investigate the among the ethnic groups between the counties.
 
 Limitations: Students of mixed race is not accounted for. Missing data are 
 omitted. From the Exploratory Data Analysis, it may be possible to analyze the
-graduation rate among different Race since the columns in grad16 and grad17 gave
+graduation rate among different Race since the columns in gradaf16 and gradaf17 gave
 us the relevant category Race {HISPANIC, AM_IND, ASIAN, PAC_ISLD, FILIPINO,
 AFRICAN_AM, WHITE, TWO_MORE_RACES, NOT_REPORTED}. However, we recommend ommiting 
 the ASIAN, PAC_ISLD, FILIPINO, TWO_MORE_RACES, and NOT_REPORTED since they are 
