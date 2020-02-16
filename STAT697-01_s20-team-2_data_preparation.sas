@@ -106,7 +106,7 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssi
 
 [Number of Observations] 8239
 
-[Number of Features] 3
+[Number of Features] 23
 
 [Data Source] The file 
 http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp was downloaded, imported into R for 
