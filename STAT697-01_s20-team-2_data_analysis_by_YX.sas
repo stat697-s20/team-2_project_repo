@@ -25,7 +25,18 @@ Limitations: Missing and incomplete data are omitted. And the results of
 different counties could be of little difference. 
 */
 
-
+proc sql;
+    select
+        AvgEstimatedFTE
+        ,COUNTY
+    from
+        analytic_file_raw_checked
+    order by 
+        AvgEstimatedFTE desc
+    ;
+quit;
+    
+    
 *******************************************************************************;
 * Research Question 2 Analysis Starting Point;
 *******************************************************************************;
