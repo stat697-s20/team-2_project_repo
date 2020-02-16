@@ -463,7 +463,8 @@ missing, where the column COUNTY is intended to be a primary key; after
 executing this data step, we see that there is no missing or repeated value, the new table generated has the same number of observations units as the original table. */
 proc sql;
     create table analytic_file_raw_checked as
-        select distinct COUNTY
+        select 
+        distinct COUNTY
         , AvgEstimatedFTE
         , Avg_Rate_of_Univ
         from analytic_file_raw
