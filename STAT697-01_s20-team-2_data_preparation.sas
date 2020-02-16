@@ -455,7 +455,8 @@ proc sql;
         where
             StaffAssign.CountyName = Univ_Ratio_by_County.COUNTY
     ;
-     
+quit;
+
         
 /* check analytic_file_raw for rows whose unique id values are repeated or 
 missing, where the column COUNTY is intended to be a primary key; after 
@@ -463,9 +464,12 @@ executing this data step, we see that there is no missing or repeated value, the
 proc sql;
     create table analytic_file_raw_checked as
         select distinct COUNTY
+        , AvgEstimatedFTE
+        , Avg_Rate_of_Univ
         from analytic_file_raw
         where not(missing(COUNTY))
-;
+    ;
+quit;
 
 
 /* using the TABLES dictionary table view to get detailed list of files we've
