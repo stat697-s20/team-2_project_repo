@@ -11,54 +11,93 @@
 * Research Question 1 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 1 of 3: Is there a difference in the graduation rate between 2016 and 
-2017 among high school students in California? 
+Question 1 of 3: Is there a difference in proportion of those meeting UC/CSU 
+requirements among California high school graduates in AY2015-16 and AY2016-17? 
 
-Rationale: This can help identify the difference in the average graduation rate 
-between the school years.
+Rationale: This can help identify the difference in the average rate of meeting 
+UC/CSU requirements between AY2015-16 and AY2016-17.
 
-Note: The rows are organized by the school district and county names, and we 
-will be able to join `gradaf16` and `gradaf17` and compare the average graduation 
-rate. From the Exploratory Data Analysis (EPA), the primary key CDS_CODE between 
-2015-2016 and 2016-2017 are different. Rather than using the SCHOOL as 
-experimental unit, it may be more consistent to assign DISTRICT or COUNTY as 
-experimental unit for comparison.
+Note: The total of from schools in the same county are combined to make 
+'TOTAL16', 'TOTAL17', and 'TOTAL1617' for AY2015-16, AY2016-17, and the 
+combined total from each district in both academic years, respectively. From the 
+Exploratory Data Analysis (EPA), the primary key CDS_CODE between AY2015-16 and 
+AY2016-17 differ. We assigned COUNTY as experimental unit for comparison since 
+they are identical in the datasets.
 
 Limitations: We must assume no significant changes in the district boundaries 
-between the 2016 and 2017 that could significantly affect the student body 
-demographic. Missing and incomplete data are omitted. 
-
+between AY2015-16 and AY2016-17 that could significantly affect the student body 
+demographic. Missing and incomplete data, by default, are ignored. 
 */
 
 
+/* Row sums YEAR by COUNTY. */
+proc summary data=gradaf16;
+    var TOTAL;
+    by COUNTY YEAR;
+    output out=want (drop=_:) sum=TOTAL16;
+run;
+
+proc summary data=gradaf17;
+    var TOTAL;
+    by COUNTY YEAR;
+    output out=want (drop=_:) sum=TOTAL17;
+run;
+
+/* Row sums by COUNTY and joined YEAR is set as the proportion denominator. */
+proc summary data=gradaf1617;
+    var TOTAL;
+    by COUNTY;
+    output out=want (drop=_:) sum=TOTAL1617;
+run;
+quit;
+
+
+/* Temporary table. Sort data by order of county and year. */
+proc sql outobs = *;
+    select
+        COUNTY
+        ,YEAR
+        ,TOTAL
+    from
+        gradaf17
+    order by 
+        COUNTY
+        ,YEAR desc
+    ;
+quit;
+
+
 *******************************************************************************;
-* Research Question Analysis Starting Point;
+* Research Question 2 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 2 of 3: Is there a difference in the graduation rate between the 
-genders among high school students in California in 2016 or 2017? 
+Question 2 of 3: Is there a difference in the proportion of those meeting UC/CSU
+requirements between counties among Californian high school graduates in 
+AY2015-16 and/or AY2016-17?  
 
-Rationale: A change in graduation rates between the genders can tell us about 
-the current demographic conditions.
+Rationale: A change in proportion of those meeting UC/CSU requirements between 
+counties can tell us about the contemporary demographic conditions.
 
-Note: Future direction can be used as a comparison for the graduation rate among 
-nonbinary gender students.
+Note: Future direction can be used as a comparison for the proportion of 
+counties that may require more resource allocation.
 
-Limitations: Nonresponse in the gender column is omitted. Not enough information 
-to know about the nonrespondents. Based on the Exploratory Data Analysis, the
-gender of students was not provided in this subset of data. We may need to check
-back to the database to find and select the dataset with pertaining information
-about gender. The gradaf16 and gradaf17 datasets we gathered are insufficient to 
-answer this research question.
+Limitations: Unique counties in gradaf16 are fewer than in gradaf17. A 
+closer look at the difference in observation length is an indicator for possible
+error source. Further investigation needed.
 */
 
 
+/* Code did not work. Code was intended to compare the column sums HISPANIC, 
+AFRICAN_AM, WHITE, and TOTAL by COUNTY */
+
+
 *******************************************************************************;
-* Research Question Analysis Starting Point;
+* Research Question 3 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 3 of 3: Is there a difference in the graduation rate between 
-race/ethnicity among high school students in California in 2016 and/or 2017? 
+Question 3 of 3: Is there a difference in the proportion of those meeting UC/CSU
+requirements rate between race/ethnicity among Californian high school graduates
+in AY2015-16 and/or AY2016-17? 
 
 Rationale: Comparing the graduation rate between ethnic groups can help us 
 evaluate the how they perform compare to the population average. Based on this 
@@ -70,9 +109,13 @@ interesting to investigate the among the ethnic groups between the counties.
 
 Limitations: Students of mixed race is not accounted for. Missing data are 
 omitted. From the Exploratory Data Analysis, it may be possible to analyze the
-graduation rate among different Race since the columns in gradaf16 and gradaf17 gave
-us the relevant category Race {HISPANIC, AM_IND, ASIAN, PAC_ISLD, FILIPINO,
-AFRICAN_AM, WHITE, TWO_MORE_RACES, NOT_REPORTED}. However, we recommend ommiting 
-the ASIAN, PAC_ISLD, FILIPINO, TWO_MORE_RACES, and NOT_REPORTED since they are 
-too vague. 
+graduation rate among different Race since the columns in gradaf16 and 
+gradaf17 gave us the relevant category Race {HISPANIC, AM_IND, ASIAN, 
+PAC_ISLD, FILIPINO, AFRICAN_AM, WHITE, TWO_MORE_RACES, NOT_REPORTED}. However, 
+we recommend ommiting ASIAN, PAC_ISLD, FILIPINO, TWO_MORE_RACES, and 
+NOT_REPORTED since they are too vague. 
 */
+
+
+/* Code did not work. Code was intended to column sums HISPANIC, AFRICAN_AM, 
+WHITE, and TOTAL by COUNTY */
