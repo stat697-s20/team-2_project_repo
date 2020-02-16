@@ -106,14 +106,14 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/StaffAssi
 
 [Number of Observations] 8239
 
-[Number of Features] 3
+[Number of Features] 23
 
 [Data Source] The file 
-http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp
-was downloaded, imported into R for further editting followed by being exported 
-as enr16.xlsx. As not all the schools have a considerably large number of Grade 
-12 students, rows with the value of column 'GR_12' less than 10 were removed. 
-All the columns except 'CDS_CODE', 'COUNTY' and 'GR_12' were removed.
+http://dq.cde.ca.gov/dataquest/dlfile/dlfile.aspx?cLevel=School&cYear=2016-17&cCat=Enrollment&cPage=filesenr.asp was downloaded, imported into R for 
+further editting followed by being exported as enr16.xlsx. The column CDS_CODE 
+was set to 'TEXT' format. As not all the schools have a considerably large 
+number of Grade 12 students, rows with the value of column 'GR_12' less than 10 
+were removed.
 
 [Data Dictionary] https://www.cde.ca.gov/ds/sd/sd/fsenr.asp
 
@@ -200,7 +200,7 @@ proc sql;
     id values will correspond to our experimental units of interest, which are
     California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
     SCHOOL in gradaf1617 are guaranteed to form a composite key */
-    create table gradaf1617 as
+    create table gradaf17_nomissing as
         select
             *
         from
@@ -212,6 +212,8 @@ proc sql;
             not(missing(DISTRICT))
             and
             not(missing(SCHOOL))
+            and
+            not(missing(CDS_CODE))
     ;
 quit;
 
@@ -220,7 +222,7 @@ quit;
 and SCHOOL form a composite key*/
 proc sql;
     /* check for duplicate unique id values; after executing this query, we see
-    that gradaf16 contains now rows, so no mitigation is needed to ensure
+    that gradaf16 contains no rows, so no mitigation is needed to ensure
     uniqueness */
     create table gradaf16_dups as
         select
@@ -243,7 +245,7 @@ proc sql;
     id values will correspond to our experimental units of interest, which are 
     California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
     SCHOOL in gradaf1516 are guaranteed to form a composite key */
-    create table gradaf1516 as
+    create table gradaf16_nomissing as
         select
             *
         from
@@ -255,8 +257,11 @@ proc sql;
             not(missing(DISTRICT))
             and
             not(missing(SCHOOL))
+            and
+            not(missing(CDS_CODE))
     ;
 quit;
+
 
 /*check gradaf17 for bad unique id values, where the column CDS_CODE is intended 
 to be a primary key*/
@@ -306,6 +311,7 @@ proc sql;
     ;
 quit;
 
+
 /* We want to identify duplicates in the unique primary key CDS_CODE in dataset
 gradaf17. */
 proc sql; 
@@ -319,9 +325,7 @@ proc sql;
             ,WHITE
             ,TOTAL
         from 
-            gradaf17
-        group by 
-            COUNTY
+            gradaf17_nomissing
     ;
     /* It is too mundane to compare the graduation rate between all schools and
     school districts in the State of California. Rather, we combine them by
@@ -339,6 +343,7 @@ proc sql;
     ;
 quit;
 
+
 /*check enr16 for bad unique id values, and use summary function to create new
 columns by adding the value of the same column of multiple observation units 
 which share the same unique id*/
@@ -352,6 +357,7 @@ proc sql;
     create table enr16_addsup as
         select
              CDS_Code
+            ,COUNTY
             ,sum(GR_12) as total_number_of_GR12_Graduate
         from
             enr16
@@ -364,6 +370,7 @@ proc sql;
     create table enr16_w3clean as
         select
              CDS_Code
+            ,COUNTY
             ,total_number_of_GR12_Graduate
         from
             enr16_addsup
@@ -372,6 +379,7 @@ proc sql;
             not(missing(CDS_Code))
     ;
 quit;
+
 
 /* check StaffAssign16 for bad unique id values, and use summary function to 
 create new columns by getting the average value of the same column of multiple 
@@ -384,38 +392,85 @@ proc sql;
     generated table staffassign16_average*/
     create table staffassign16_average as
         select
-             DistrictCode
-            ,Schoolcode
+            CountyName
             ,avg(EstimatedFTE) as AvgEstimatedFTE
         from
             StaffAssign16
         group by
-            DistrictCode
-            ,Schoolcode            
+            CountyName            
     ;
     /* remove rows with missing unique id components. After executing this 
     query, the table staffassign16_w3clean generated still has 7680 rows, which
     means no missing value of DistrictCode or Schoolcode here */
     create table staffassign16_w3clean as
         select
-             cats(DistrictCode, Schoolcode) as CDS_Code
-            ,DistrictCode
-            ,Schoolcode
-            ,AvgEstimatedFTE
+             *
         from
             staffassign16_average
         where
-             /* remove rows with missing unique id value components */
-            not(missing(DistrictCode))
-            and
-            not(missing(Schoolcode))
+             /* remove rows with missing countynames */
+            not(missing(CountyName))
     ;
 quit;
 
 
-/* build analytic dataset from raw datasets imported above, including only the
-columns and minimal data-cleaning/transformation needed to address each
-research questions/objectives in data-analysis files */
+/* The analytic dataset is built here.
+YX: Three tables are needed for my part of data analysis. When the CDS_CODE 
+column and COUNTY column from table gradaf17 and enr16 were both matching, I 
+understood that they are talking about the same school, and used the number of 
+Grade 12 enrollment from enr16 as the denominator and the number of students 
+meeting CSU/UC University requirements as the numerator to calculate a ratio. 
+Then I grouped the join table by county and calcuated the average ratio of each 
+county group. Finally I joined the table newly generated and the pre-processed 
+table staffassign16 using the countyname as the unique id, thus I would be able 
+to compare the average ratio between university eligibility and Grade 12 total 
+enrollment per county, and the average value of Estimated FTE per county.*/
+proc sql;
+    create table analytic_file_raw as
+        select 
+            StaffAssign.AvgEstimatedFTE
+            , Univ_Ratio_by_County.COUNTY
+            , Univ_Ratio_by_County.Avg_Rate_of_Univ
+        from
+            (select
+                upcase(enr.COUNTY) as COUNTY
+                /* use the number of students meeting university requirements 
+                from table gradaf17 as the numerator, the number of students 
+                totally enrolled on that year from table enr16 as the 
+                denonminator, to calculate the ratio. As students enrolled in 
+                AY 2016 and graduated in AY 2017, here I chose to use enr16 
+                rather than enr17. */
+                , avg(gradaf17.TOTAL/enr.total_number_of_GR12_Graduate) as 
+                Avg_Rate_of_Univ
+            from
+                enr16_w3clean as enr
+                , gradaf17_clean as gradaf17
+            where
+                /*Both the county name and the cds_code need to match*/
+                enr.COUNTY = gradaf17.COUNTY
+                and enr.CDS_CODE = gradaf17.CDS_CODE
+            group by
+                enr.COUNTY) as Univ_Ratio_by_County
+                , staffassign16_w3clean as StaffAssign
+        where
+            StaffAssign.CountyName = Univ_Ratio_by_County.COUNTY
+    ;
+quit;
+
+        
+/* check analytic_file_raw for rows whose unique id values are repeated or 
+missing, where the column COUNTY is intended to be a primary key; after 
+executing this data step, we see that there is no missing or repeated value, the new table generated has the same number of observations units as the original table. */
+proc sql;
+    create table analytic_file_raw_checked as
+        select 
+        distinct COUNTY
+        , AvgEstimatedFTE
+        , Avg_Rate_of_Univ
+        from analytic_file_raw
+        where not(missing(COUNTY))
+    ;
+quit;
 
 
 /* using the TABLES dictionary table view to get detailed list of files we've

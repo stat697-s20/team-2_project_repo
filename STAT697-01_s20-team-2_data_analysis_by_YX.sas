@@ -4,7 +4,7 @@
 *******************************************************************************;
 
 /* load external file that will generate final analytic file */
-%include './STAT697-01_s20-team-2_data_preparation.sas';
+%include "./STAT697-01_s20-team-2_data_preparation.sas";
 
 
 *******************************************************************************;
@@ -26,6 +26,18 @@ different counties could be of little difference.
 */
 
 
+proc sql outobs = 10;
+    select
+        AvgEstimatedFTE
+        ,COUNTY
+    from
+        analytic_file_raw_checked
+    order by 
+        AvgEstimatedFTE desc
+    ;
+quit;
+    
+    
 *******************************************************************************;
 * Research Question 2 Analysis Starting Point;
 *******************************************************************************;
@@ -50,6 +62,18 @@ different counties could be of little difference.
 */
 
 
+proc sql outobs = 10;
+    select
+        Avg_Rate_of_Univ
+        ,COUNTY
+    from
+        analytic_file_raw_checked
+    order by 
+        Avg_Rate_of_Univ desc
+    ;
+quit;
+
+
 *******************************************************************************;
 * Research Question 3 Analysis Starting Point;
 *******************************************************************************;
@@ -67,3 +91,6 @@ questions could be preliminary. And the overlap could be caused by other
 confounding factors, in this case the overlap cannot indicate there is any
 association.
 */
+
+/*YX: No code needed here for now as this question is basically the exploration 
+and discussion based upon the results of the first two questions.*/
