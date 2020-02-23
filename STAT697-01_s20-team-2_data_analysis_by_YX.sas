@@ -20,7 +20,13 @@ title2 justify=left
 "Rationale: This would help identify counties with high level of average Estimated FTE."
 ;
 
+footnote1 justify=left
+"The different from the county ranking NO.1 and county ranking No.10 in the value of average Estimated FTE is less than 7."
+;
 
+footnote2 justify=left
+"Per the assumption here, the higher value of average Esimated FTE means that more teachers are working full-time."
+;
 
 /*
 Note: This needs to get the average of the column 'EstimatedFTE' for all the 
@@ -30,9 +36,9 @@ StaffAssign16.
 Limitations: Missing and incomplete data are omitted. And the results of 
 different counties could be of little difference. 
 
-Methodology: Use proc sql to query the output observation of the 
+Methodology: Use proc sql statement to retrieve data of average value of Estimated FTE by county, sorted by the value, from the table analytic_file_raw_checked, and save the output of query into a table. Then retrieve all the data from the newly-generated table. After that, use proc sgplot to output a boxplot to illustrate the distribution of the value of Estimated FTE for all the counties.
 
-Followup Steps:
+Followup Steps:More carefully and thoroughly inspections on the data could be done here.
 */
 
 
@@ -56,6 +62,19 @@ proc sql outobs=10;
         q1
     ;
 quit;
+
+/* clear titles/footnotes*/
+title;
+footnote;
+
+
+title1 justify=left
+"Plots illustrating distribution of the value of AvgEstimatedFTE for all the counties."
+;
+
+footnote1 justtify=left
+"In the plot above, we can see that most the counties have the value of AvgEstimatedFTE between 20 and 35."
+;
 
 proc sgplot data=q1;
     hbox AvgEstimatedFTE / category=COUNTY;
@@ -99,7 +118,7 @@ the gradaf17 dataset might not be best possible denonminator of the ratio as it
 does not include students with high school equivalencies. And the results from
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve data of average rate of students meeting university requirements by county, sorted by the value, from the table analytic_file_raw_checked, and save the output of query into a table. Then retrieve all the data from the newly-generated table.
+Methodology: Use proc sql statement to retrieve data of average rate of students meeting university requirements by county, sorted by the value, from the table analytic_file_raw_checked, and save the output of query into a table. Then retrieve all the data from the newly-generated table. After that, use proc sgplot to output a boxplot to illustrate the distribution of the value of Avg_Rate_of_Univ for all the counties.
 
 Followup Steps: More carefully and thoroughly inspections on the data could be done here. Sierra ranks NO.1 here with a rate of more than 1, it's obvisouly suspicious.
 */
@@ -126,10 +145,22 @@ proc sql outobs=10;
     ;
 quit;
 
+/* clear titles/footnotes*/
+title;
+footnote;
+
+
+title1 justify=left
+"Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties."
+;
+
+footnote1 justtify=left
+"In the plot above, apart from the Sierra county, which is a suspicious outlier, most the counties have the value of Avg_Rate_of_Univ between 0.2 and 0.6."
+;
+
 proc sgplot data=q2;
     hbox Avg_Rate_of_Univ / category=COUNTY;
 run;
-
 
 /* clear titles/footnotes*/
 title;
