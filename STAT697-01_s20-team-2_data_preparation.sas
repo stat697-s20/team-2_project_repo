@@ -174,9 +174,12 @@ macro variables of the dsn, url and dataset file type.  */
 %loadDatasets
 
 
-/* Check gradaf17 for bad unique id values, where the columns 'COUNTY', 
-'DISTRICT', and 'SCHOOL' form a composite key. After executing this query, we 
-see that gradaf17_raw_dups has no missing unique id component */
+/* Check gradaf17 for bad unique id values, where the columns County, 
+District, and School are intended to form a composite key. 
+
+Check for duplicate unique id values; after executing this query, we 
+see that the unique id components in gradaf17_raw_dups has no missing 
+values. */
 proc sql;
 create table gradaf17_raw_dups as
         select
@@ -187,7 +190,7 @@ create table gradaf17_raw_dups as
             as row_count_for_unique_id_value
         from gradaf17
         group by
-            COUNTY
+             COUNTY
             ,DISTRICT
             ,SCHOOL
         having
