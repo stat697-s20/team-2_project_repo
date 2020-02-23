@@ -81,7 +81,7 @@ title1 justify=left
 counties."
 ;
 
-footnote1 justtify=left
+footnote1 justify=left
 "In the plot above, we can see that most the counties have the value of 
 AvgEstimatedFTE between 20 and 35."
 ;
@@ -173,7 +173,7 @@ title1 justify=left
 "Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties."
 ;
 
-footnote1 justtify=left
+footnote1 justify=left
 "In the plot above, apart from the Sierra county, which is a suspicious outlier, most the counties have the value of Avg_Rate_of_Univ between 0.2 and 0.6."
 ;
 
@@ -253,7 +253,7 @@ title1 justify=left
 "Plots illustrating the slight positive correlation between AvgEstimatedFTE and Avg_Rate_of_Univ."
 ;
 
-footnote1 justtify=left
+footnote1 justify=left
 "In the plot above, we can see the average rate of students meeting university requirements tends to increase as the average value of Estimated FTE increases."
 ;
 
