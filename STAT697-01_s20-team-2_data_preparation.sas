@@ -69,7 +69,7 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/gradaf16.
 [Dataset Description] Assignment data for all K-12 California public education 
 certificated teachers, administrators, and pupil services personnel, AY2016-17
 
-[Experimental Unit Description] K-12 California public education certificated 
+[Experimental Unit Description] K-12 California public education certified 
 teachers, administrators, and pupil services personnel, AY2016-17
 
 [Number of Observations] 100,000
@@ -128,18 +128,16 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %let inputDataset4Type = XLSX;
 
 
-/* load raw datasets over the wire, if they doesn't already exist */
+/* Load raw datasets over the wire, if they doesn't already exist. Input the 
+macro variables of the dsn, url and dataset file type.  */
 %macro loadDataIfNotAlreadyAvailable(dsn,url,filetype);
-    /* input the macro variables of the dsn, url and dataset file type */
     %put &=dsn;
     %put &=url;
     %put &=filetype;
     %if
-        /* to check they doesn't already exist */
         %sysfunc(exist(&dsn.)) = 0
     %then
         %do;
-            /* loading datasets over the line */
             %put Loading dataset &dsn. over the wire now...;
             filename
                 tempfile
@@ -165,7 +163,8 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %mend;
 %macro loadDatasets;
     %do i = 1 %to 4;
-        %loadDataIfNotAlreadyAvailable(
+        %loadDataIfNotAlreadyAvailable
+        (
             &&inputDataset&i.DSN.,
             &&inputDataset&i.URL.,
             &&inputDataset&i.Type.
@@ -175,195 +174,174 @@ https://github.com/yxie18-stat697/team-2_project_repo/blob/master/data/enr16.xls
 %loadDatasets
 
 
-/* check gradaf17 for bad unique id values, where the columns COUNTY, DISTRICT, 
-and SCHOOL form a composite key */
+/* Check gradaf17 for bad unique id values, where the columns County, 
+District, and School are intended to form a composite key. 
+
+Check for duplicate unique id values; after executing this query, we 
+see that the unique id components in gradaf17_raw_dups has no missing 
+values. */
 proc sql;
-    /* check gradaf17 for duplicate unique id values; after executing this 
-    query, we see that gradaf17_raw_dups has no missing unique id component */
-    create table gradaf17_raw_dups as
+create table gradaf17_raw_dups as
         select
-            COUNTY
-            ,DISTRICT
-            ,SCHOOL
-            ,count(*) as row_count_for_unique_id_value
-        from
-            gradaf17
+             county
+            ,district
+            ,school
+            ,count(*) 
+            as row_count_for_unique_id_value
+        from gradaf17
         group by
-            COUNTY
-            ,DISTRICT
-            ,SCHOOL
+             County
+            ,District
+            ,School
         having
             row_count_for_unique_id_value > 1
     ;
-    /* remove rows with missing unique id components, or with unique ids that do 
-    not correspond to schools; after executing this query, the new dataset from
-    gradaf1617 will have no duplicate/repeated unique id values, and all unique
-    id values will correspond to our experimental units of interest, which are
-    California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
-    SCHOOL in gradaf1617 are guaranteed to form a composite key */
+    /* Remove rows with missing unique id components. This query ensures that 
+    the new dataset from gradaf17_nomissing will have no duplicate/repeated 
+    unique ids, and all unique id components correspond with experimental units 
+    of interest, which is County. */
     create table gradaf17_nomissing as
-        select
-            *
-        from
-            gradaf17
+        select *
+        from gradaf17
         where
-            /* remove rows with missing unique id value components */
-            not(missing(COUNTY))
+            not(missing(County))
             and
-            not(missing(DISTRICT))
+            not(missing(District))
             and
-            not(missing(SCHOOL))
+            not(missing(School))
             and
-            not(missing(CDS_CODE))
+            not(missing(CDS_Code))
     ;
 quit;
 
 
-/* check gradaf16 for bad unique id values, where the columns COUNTY, DISTRICT, 
-and SCHOOL form a composite key */
+/* Check gradaf16 for bad unique id values, where the columns County, District, 
+and School form a composite key. Check for duplicate unique id values. This 
+query creates a new table gradaf16_dups and shows that gradaf16 contains no 
+duplicates. */
 proc sql;
-    /* check for duplicate unique id values; after executing this query, we see
-    that gradaf16 contains no rows, so no mitigation is needed to ensure
-    uniqueness */
     create table gradaf16_dups as
         select
-            COUNTY
-            ,DISTRICT
-            ,SCHOOL
-            ,count(*) as row_count_for_unique_id_value
-        from
-            gradaf16
-        group by
-            COUNTY
-            ,DISTRICT
-            ,SCHOOL
+             County
+            ,count(*) 
+            as row_count_for_unique_id_value
+        from gradaf16
+        group by County
         having
             row_count_for_unique_id_value > 1
     ;
-    /* remove rows with missing unique id components, or iwht unique ids that do
-    not correspond to schools; after executing this query, the new dataset 
-    gradaf1516 will have no duplicate/repeated unique id values, and all unique 
-    id values will correspond to our experimental units of interest, which are 
-    California Public K-12 schools; this means the columns COUNTY, DISTRICT, and
-    SCHOOL in gradaf1516 are guaranteed to form a composite key */
+    /* Remove rows with missing unique id components; after executing this 
+    query, a new table gradaf16_nomissing is created after removing 
+    duplicate/repeated unique id values. The columns County, District, and
+    School in gradaf1516 form a composite key, and all unique ids that
+    correspond to our experimental units of interest, which are the counties. */
     create table gradaf16_nomissing as
-        select
-            *
-        from
-            gradaf16
+        select *
+        from gradaf16
         where
-            /* remove rows with missing unique id value components */
-            not(missing(COUNTY))
+            not(missing(County))
             and
-            not(missing(DISTRICT))
+            not(missing(District))
             and
-            not(missing(SCHOOL))
+            not(missing(School))
             and
-            not(missing(CDS_CODE))
+            not(missing(CDS_Code))
     ;
 quit;
 
 
-/* check gradaf17 for bad unique id values, where the column CDS_CODE is 
-intended to be a primary key */
+/* Join gradaf16 and gradaf17 where County is the primary key. Check for 
+unique id values that are repeated or missing; after executing this query, we 
+see that gradaf17_raw_bad_unique_ids shows 0 values that need to be removed. 
+
+The query below allows us to build a fit-for-purpose mitigation step with no 
+guessing or unnecessary effort */
 proc sql;
-    /* check for unique id values that are repeated, missing, or correspond to
-    non-schools; after executing this query, we see that 
-    gradaf17_raw_bad_unique_ids only has no-school values of CDS_CODE that need
-    to be removed. The query below allows us to build a fit-for-purpose 
-    mitigation step with no guessing or unnecessary effort */
     create table gradaf17_raw_bad_unique_ids as
-        select
-            A.*
-        from
-            gradaf17 as A
+        select gradaf17.*
+        from gradaf17 as A
             left join
             (
                 select
-                    CDS_CODE
+                     CDS_Code
                     ,count(*) as row_count_for_unique_id_value
-                from
-                    gradaf17
-                group by
-                    CDS_CODE
-            ) as B
-            on A.CDS_CODE=B.CDS_CODE
+                from gradaf17
+                group by County
+            ) 
+            as B
+            on A.CDS_Code=B.CDS_Code
         having
-            /* capture rows corresponding to repeated primary key values */
             row_count_for_unique_id_value > 1
             or
-            /* capture rows corresponding to missing primary key values */
-            missing(CDS_CODE)
-            or
-            /* capture rows corresponding to non-school primary key values */
-            substr(CDS_CODE,8,7) in ("0000000","0000001")
+            missing(CDS_Code)
     ;
-    /* remove rows with primary keys that do not correspond to schools; after
-    executing this query, the new dataset gradaf1617 will have no 
+    /* after executing this query, the new dataset gradaf1617 will have no 
     duplicate/repeated unique id values, and all unique id values will 
-    correspond to our experimental units of interest, which are California 
-    Public K-12 schools; this means the column CDS_CODE in gradaf1617 is 
-    guaranteed to form a primary key */
+    correspond to our experimental units of interest, California counties; this
+    means the column County in gradaf1617 is guaranteed to form a primary key */
     create table gradaf1617 as
-        select
-            *
-        from
-            gradaf17
+        select *
+        from gradaf16 as A
+            left join
+            (
+            select
+                 County
+                ,count(*) as row_count_for_unique_id_value
+            from gradaf17
+            group by County
+            )
+            as B
+            on A.County=B.County
+        having
+            row_count_for_unique_id_value > 1
     ;
-quit;
-
-
-/* We want to identify duplicates in the unique primary key CDS_CODE in dataset
-gradaf17 */
-proc sql; 
+    /* We want to identify duplicates in the unique primary key CDS_Code in 
+    dataset gradaf17 */
     create table gradaf17_clean as
         select
-            CDS_CODE
-            ,COUNTY
-            ,HISPANIC
-            ,AM_IND
-            ,AFRICAN_AM
-            ,WHITE
-            ,TOTAL
-        from 
-            gradaf17_nomissing
+             CDS_Code
+            ,County
+            ,Hispanic
+            ,Am_Ind
+            ,African_Am
+            ,White
+            ,Total
+        from gradaf17_nomissing
     ;
-    /* It is too mundane to compare the graduation rate between all schools and
-    school districts in the State of California. Rather, we combine them by
-    County */
+    /* It is too tedious to compare the graduation rate between all schools and
+    school districts in California. Instead, we combine them by the county. */
     create table gradaf17_county as
         select
-            COUNTY
-            ,HISPANIC
-            ,AM_IND
-            ,AFRICAN_AM
-            ,WHITE
-            ,sum(TOTAL) as COUNTY_TOTAL
+             County
+            ,Hispanic
+            ,Am_Ind
+            ,African_Am
+            ,White
+            ,sum(Total) 
+            as County_Total
         from gradaf17_clean
-        group by COUNTY
+        group by County
     ;
 quit;
 
 
-/* check enr16 for bad unique id values, and use summary function to create new
+/* Check enr16 for bad unique id values, and use summary function to create new
 columns by adding the value of the same column of multiple observation units 
-which share the same unique id */
+which share the same unique id. As one specific school goes with multiple rows 
+of data with each row representing an unique combination of ethnicity, we need 
+to check for duplcate unique id values and combine the value of column 'GR_12' 
+of rows of data that share the same unique id value - CDS_code. After exeuting 
+this query, we see there are 1977 rows and 2 columns, and the table 
+enr16_addsup will have no duplicated unique id values. */
 proc sql;
-    /* as one specific school goes with multiple rows of data with each row 
-    representing an unique combination of ethnicity and gender, we need to check
-    for duplcate unique id values and combine the value of column 'GR_12' of 
-    rows of data that share the same unique id value - CDS_code. After exeuting 
-    this query, we see there are 1977 rows and 2 columns, and the table 
-    enr16_addsup will have no duplicated unique id values. */
     create table enr16_addsup as
         select
              CDS_Code
-            ,COUNTY
-            ,sum(GR_12) as total_number_of_GR12_Graduate
-        from
-            enr16
-        group by
-             CDS_Code
+            ,County
+            ,sum(GR_12) 
+            as total_number_of_GR12_Graduate
+        from enr16
+        group by CDS_Code
     ;
     /* remove rows with missing unique id components. After executing this
     query, the table enr16_w3clean generated still has 1977 rows, which means no
@@ -371,29 +349,25 @@ proc sql;
     create table enr16_w3clean as
         select
              CDS_Code
-            ,COUNTY
+            ,County
             ,total_number_of_GR12_Graduate
-        from
-            enr16_addsup
-        where
-             /* remove rows with missing unique id value components */
-            not(missing(CDS_Code))
+        from enr16_addsup
+        where not(missing(CDS_Code))
     ;
 quit;
 
 
 /* check StaffAssign16 for bad unique id values, and use summary function to 
 create new columns by getting the average value of the same column of multiple 
-observation units which share the same unique id */
+observation units which share the same unique id. As one row in staffassign16 
+represents one staff, the first thing we need to do is to get the average value 
+of Column EstimatedFTE of rows sharing the same composite keys formed by column 
+DistrictCode and SchoolCode. After executing this query, there are 7680 rows and 
+3 columns in the newly-generated table staffassign16_average. */
 proc sql;
-    /* As one row in staffassign16 represents one staff, the first thing we need
-    to do is to get the average value of Column EstimatedFTE of rows sharing the
-    same composite keys formed by column DistrictCode and SchoolCode. After 
-    executing this query, there are 7680 rows and 3 columns in the newly-
-    generated table staffassign16_average */
     create table staffassign16_average as
         select
-            CountyName
+             CountyName
             ,avg(EstimatedFTE) as AvgEstimatedFTE
         from
             StaffAssign16
@@ -404,12 +378,9 @@ proc sql;
     query, the table staffassign16_w3clean generated still has 7680 rows, which
     means no missing value of DistrictCode or Schoolcode here */
     create table staffassign16_w3clean as
-        select
-             *
-        from
-            staffassign16_average
-        where
-             /* remove rows with missing countynames */
+        select *
+        from staffassign16_average
+        where 
             not(missing(CountyName))
     ;
 quit;
@@ -429,49 +400,48 @@ enrollment per county, and the average value of Estimated FTE per county. */
 proc sql;
     create table analytic_file_raw as
         select 
-            StaffAssign.AvgEstimatedFTE
-            , Univ_Ratio_by_County.COUNTY
-            , Univ_Ratio_by_County.Avg_Rate_of_Univ
+             StaffAssign.AvgEstimatedFTE
+            ,Univ_Ratio_by_County.COUNTY
+            ,Univ_Ratio_by_County.Avg_Rate_of_Univ
         from
             (select
-                upcase(enr.COUNTY) as COUNTY
+                upcase(enr.County) as County
                 /* use the number of students meeting university requirements 
                 from table gradaf17 as the numerator, the number of students 
                 totally enrolled on that year from table enr16 as the 
                 denonminator, to calculate the ratio. As students enrolled in 
-                AY 2016 and graduated in AY 2017, here I chose to use enr16 
+                AY2016-17 and graduated in AY2016-17, here I chose to use enr16 
                 rather than enr17. */
-                , avg(gradaf17.TOTAL/enr.total_number_of_GR12_Graduate) as 
+                ,avg(gradaf17.Total/enr.total_number_of_GR12_Graduate) as 
                 Avg_Rate_of_Univ
             from
                 enr16_w3clean as enr
-                , gradaf17_clean as gradaf17
+                ,gradaf17_clean as gradaf17
             where
                 /* Both the county name and the cds_code need to match */
-                enr.COUNTY = gradaf17.COUNTY
-                and enr.CDS_CODE = gradaf17.CDS_CODE
+                enr.County = gradaf17.County
+                and enr.CDS_Code = gradaf17.CDS_Code
             group by
-                enr.COUNTY) as Univ_Ratio_by_County
-                , staffassign16_w3clean as StaffAssign
+                enr.County as Univ_Ratio_by_County
+                ,staffassign16_w3clean as StaffAssign
         where
-            StaffAssign.CountyName = Univ_Ratio_by_County.COUNTY
+            StaffAssign.CountyName = Univ_Ratio_by_County.County
     ;
 quit;
 
         
 /* check analytic_file_raw for rows whose unique id values are repeated or 
-missing, where the column COUNTY is intended to be a primary key; after 
+missing, where the column County is intended to be a primary key; after 
 executing this data step, we see that there is no missing or repeated value, the 
 new table generated has the same number of observations units as the original 
 table. */
 proc sql;
     create table analytic_file_raw_checked as
-        select 
-        distinct COUNTY
-        , AvgEstimatedFTE
-        , Avg_Rate_of_Univ
+        select distinct County
+            ,AvgEstimatedFTE
+            ,Avg_Rate_of_Univ
         from analytic_file_raw
-        where not(missing(COUNTY))
+        where not(missing(County))
     ;
 quit;
 

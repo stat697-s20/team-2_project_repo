@@ -26,16 +26,29 @@ different counties could be of little difference.
 */
 
 
-proc sql outobs = 10;
-    select
-        AvgEstimatedFTE
-        ,COUNTY
+proc sql;
+    create table q1 as
+        select
+            AvgEstimatedFTE
+            ,COUNTY
+        from
+            analytic_file_raw_checked
+        order by 
+            AvgEstimatedFTE desc
+        ;
+quit;
+
+proc sql outobs=10;
+    select 
+        *
     from
-        analytic_file_raw_checked
-    order by 
-        AvgEstimatedFTE desc
+        q1
     ;
 quit;
+
+proc sgplot data=q1;
+    hbox AvgEstimatedFTE / category=COUNTY;
+run;
     
     
 *******************************************************************************;
@@ -62,17 +75,29 @@ different counties could be of little difference.
 */
 
 
-proc sql outobs = 10;
-    select
-        Avg_Rate_of_Univ
-        ,COUNTY
+proc sql;
+    create table q2 as
+        select
+            Avg_Rate_of_Univ
+            ,COUNTY
+        from
+            analytic_file_raw_checked
+        order by 
+            Avg_Rate_of_Univ desc
+        ;
+quit;
+
+proc sql outobs=10;
+    select 
+        *
     from
-        analytic_file_raw_checked
-    order by 
-        Avg_Rate_of_Univ desc
+        q2
     ;
 quit;
 
+proc sgplot data=q2;
+    hbox Avg_Rate_of_Univ / category=COUNTY;
+run;
 
 *******************************************************************************;
 * Research Question 3 Analysis Starting Point;
@@ -92,5 +117,26 @@ confounding factors, in this case the overlap cannot indicate there is any
 association.
 */
 
-/* YX: No code needed here for now as this question is basically the exploration 
-and discussion based upon the results of the first two questions. */
+
+proc sql;
+    create table q3 as
+        select
+            Avg_Rate_of_Univ
+            ,q2.COUNTY
+            ,AvgEstimatedFTE
+        from
+            q1
+            ,q2
+        where
+            q1.COUNTY = q2.COUNTY
+        ;
+quit;
+
+proc corr data=q3 noprob nosimple PEARSON SPEARMAN;
+   var AvgEstimatedFTE Avg_Rate_of_Univ;
+run;
+
+proc sgplot data=q3;
+    scatter x=AvgEstimatedFTE y=Avg_Rate_of_Univ;
+    ellipse x=AvgEstimatedFTE y=Avg_Rate_of_Univ;
+run;
