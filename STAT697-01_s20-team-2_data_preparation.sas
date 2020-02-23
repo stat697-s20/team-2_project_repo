@@ -189,10 +189,7 @@ create table gradaf17_raw_dups as
             ,count(*) 
             as row_count_for_unique_id_value
         from gradaf17
-        group by
-             County
-            ,District
-            ,School
+        group by County
         having
             row_count_for_unique_id_value > 1
     ;
@@ -401,7 +398,7 @@ proc sql;
     create table analytic_file_raw as
         select 
              StaffAssign.AvgEstimatedFTE
-            ,Univ_Ratio_by_County.COUNTY
+            ,Univ_Ratio_by_County.County
             ,Univ_Ratio_by_County.Avg_Rate_of_Univ
         from
             (select
