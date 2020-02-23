@@ -494,15 +494,3 @@ proc sql;
         where not(missing(County))
     ;
 quit;
-
-
-/* using the TABLES dictionary table view to get detailed list of files we've
-generated above by printing the names of all tables/datasets */
-proc sql;
-    select *
-    from dictionary.tables
-     /* As TABLES dictionary table produces a large amount of information, here
-    we need to specify in the where clause */
-    where libname = 'WORK'
-    order by memname;
-quit;
