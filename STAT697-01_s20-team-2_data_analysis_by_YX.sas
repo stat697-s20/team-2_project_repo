@@ -103,18 +103,17 @@ run;
 * Research Question 3 Analysis Starting Point;
 *******************************************************************************;
 /*
-Question 3 of 3: Are there any overlap between the results of the above two 
-questions? 
+Question 3 of 3: Is there any relationship between the two variables 
+respectively explored by the above two questions?
 
 Rationale: This would help inform whether the level of average Estimated FTE is 
 associated with the percentage of students meeting university requirements.
 
-Note: This needs to compare the result of the above two questions.
+Note: This needs to obtain the correlation of the two variables explored above.
 
 Limitations: The comparison between the rankings produced by the previous two
-questions could be preliminary. And the overlap could be caused by other 
-confounding factors, in this case the overlap cannot indicate there is any
-association.
+questions could be preliminary. And the overlaps on the two rankings could be 
+caused by other confounding factors.
 */
 
 
