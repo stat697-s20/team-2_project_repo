@@ -18,52 +18,34 @@ Rationale: This can help identify the difference in the average rate of meeting
 UC/CSU requirements between AY2015-16 and AY2016-17.
 
 Note: The total of from schools in the same county are combined to make 
-'TOTAL16', 'TOTAL17', and 'TOTAL1617' for AY2015-16, AY2016-17, and the 
-combined total from each district in both academic years, respectively. From the 
-Exploratory Data Analysis (EPA), the primary key CDS_CODE between AY2015-16 and 
-AY2016-17 differ. We assigned COUNTY as experimental unit for comparison since 
+Total16, Total17, and Total1617 for AY2015-16, AY2016-17, and the 
+combined total from each county in both academic years, respectively. From the 
+Exploratory Data Analysis (EPA), the primary key CDS_Codee between AY2015-16 and 
+AY2016-17 differ. We assigned County as experimental unit for comparison since 
 they are identical in the datasets.
 
 Limitations: We must assume no significant changes in the district boundaries 
 between AY2015-16 and AY2016-17 that could significantly affect the student body 
-demographic. Missing and incomplete data, by default, are ignored. 
+demographic. Missing and incomplete data, by default, are ignored.
 */
-
-
-/* Row sums YEAR by COUNTY. */
 proc summary data=gradaf16;
-    var TOTAL;
-    by COUNTY YEAR;
-    output out=want (drop=_:) sum=TOTAL16;
+    by County Year;
+    var Total;
+    output out=want (drop=_:) sum=Total16;
 run;
 
 proc summary data=gradaf17;
-    var TOTAL;
-    by COUNTY YEAR;
-    output out=want (drop=_:) sum=TOTAL17;
+    var Total;
+    by County Year;
+    output out=want sum=Total17;
 run;
 
-/* Row sums by COUNTY and joined YEAR is set as the proportion denominator. */
+/* Row sums by County and joined Year is set as the proportion denominator. */
 proc summary data=gradaf1617;
-    var TOTAL;
-    by COUNTY;
-    output out=want (drop=_:) sum=TOTAL1617;
+    var Total;
+    by County;
+    output out=want (drop=_:) sum=Total1617;
 run;
-quit;
-
-
-/* Temporary table. Sort data by order of county and year. */
-proc sql outobs = *;
-    select
-        COUNTY
-        ,YEAR
-        ,TOTAL
-    from
-        gradaf17
-    order by 
-        COUNTY
-        ,YEAR desc
-    ;
 quit;
 
 
@@ -85,10 +67,18 @@ Limitations: Unique counties in gradaf16 are fewer than in gradaf17. A
 closer look at the difference in observation length is an indicator for possible
 error source. Further investigation needed.
 */
+proc freq data=gradaf17_COUNTY;
+    by County;
+    var 
+         Hispanic 
+        ,Am_Ind
+        ,African_Am
+        ,White
+        ,Total
+    ;
+proc print;
+quit;
 
-
-/* Code did not work. Code was intended to compare the column sums HISPANIC, 
-AFRICAN_AM, WHITE, and TOTAL by COUNTY */
 
 
 *******************************************************************************;
@@ -110,12 +100,13 @@ interesting to investigate the among the ethnic groups between the counties.
 Limitations: Students of mixed race is not accounted for. Missing data are 
 omitted. From the Exploratory Data Analysis, it may be possible to analyze the
 graduation rate among different Race since the columns in gradaf16 and 
-gradaf17 gave us the relevant category Race {HISPANIC, AM_IND, ASIAN, 
-PAC_ISLD, FILIPINO, AFRICAN_AM, WHITE, TWO_MORE_RACES, NOT_REPORTED}. However, 
-we recommend ommiting ASIAN, PAC_ISLD, FILIPINO, TWO_MORE_RACES, and 
-NOT_REPORTED since they are too vague. 
-*/
+gradaf17 gave us the relevant category race {Hispanic, Am_Ind, Asian, 
+Pac_Isld, Filipino, African_Am, White, Two_More_Races, Not_Reported}. However, 
+we recommend ommiting Asian, Pac_Isld, Filipino, Two_More_Races, and 
+Not_Reported since they are too vague. */
 
+proc means data=gradaf1617;
+run;
 
-/* Code did not work. Code was intended to column sums HISPANIC, AFRICAN_AM, 
-WHITE, and TOTAL by COUNTY */
+proc means data=gradaf17_COUNTY;
+run;
