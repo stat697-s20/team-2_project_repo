@@ -387,45 +387,95 @@ quit;
 
 
 /* The analytic dataset is built here.
-YX: Three tables are needed for my part of data analysis. When the CDS_CODE 
-column and COUNTY column from table gradaf17 and enr16 were both matching, I 
-understood that they are talking about the same school, and used the number of 
-Grade 12 enrollment from enr16 as the denominator and the number of students 
-meeting CSU/UC University requirements as the numerator to calculate a ratio. 
-Then I grouped the join table by county and calcuated the average ratio of each 
-county group. Finally I joined the table newly generated and the pre-processed 
-table staffassign16 using the countyname as the unique id, thus I would be able 
-to compare the average ratio between university eligibility and Grade 12 total 
-enrollment per county, and the average value of Estimated FTE per county. */
+Three datasets are needed for YX's data analysis, they are gradaf17, enr16 and 
+StaffAssign16. MW's data analysis needs to combine gradaf16 and gradaf17, and 
+apply the summary function to the column values after the datasets are being 
+grouped-by the column county. The codes below use three layers of subquery to 
+combine these four datasets into one table.*/
 proc sql;
     create table analytic_file_raw as
         select 
-             StaffAssign.AvgEstimatedFTE
-            ,Univ_Ratio_by_County.COUNTY
-            ,Univ_Ratio_by_County.Avg_Rate_of_Univ
+            gradaf1617.county
+            ,gradaf1617.county_am_ind
+            ,gradaf1617.county_african_am
+            ,gradaf1617.county_white
+            ,gradaf1617.county_total
+            ,univ_ratio_staff.AvgEstimatedFTE
+            ,univ_ratio_staff.Avg_Rate_of_Univ
         from
-            (select
-                upcase(enr.County) as County
-                /* use the number of students meeting university requirements 
-                from table gradaf17 as the numerator, the number of students 
-                totally enrolled on that year from table enr16 as the 
-                denonminator, to calculate the ratio. As students enrolled in 
-                AY2016-17 and graduated in AY2016-17, here I chose to use enr16 
-                rather than enr17. */
-                ,avg(gradaf17.Total/enr.total_number_of_GR12_Graduate) as 
-                Avg_Rate_of_Univ
-            from
-                enr16_w3clean as enr
-                ,gradaf17_clean as gradaf17
-            where
-                /* Both the county name and the cds_code need to match */
-                enr.County = gradaf17.County
-                and enr.CDS_Code = gradaf17.CDS_Code
-            group by
-                enr.County as Univ_Ratio_by_County
+            /* Below we combine the dataset univ_ratio_by_county with dataset 
+            staffassign16_w3clean, and name it as univ_ratio_staff*/
+            (select 
+                Univ_Ratio_by_County.COUNTY
+                ,Univ_Ratio_by_County.Avg_Rate_of_Univ
+                ,StaffAssign.AvgEstimatedFTE
+            from   
+                /*Below we create the temporary dataset univ_ratio_by_county. 
+                When the CDS_CODE column and COUNTY column from table gradaf17 
+                and enr16 were both matching, I understood that they are talking 
+                about the same school, and used the number of Grade 12 
+                enrollment from enr16 as the denominator and the number of 
+                students meeting CSU/UC University requirements as the numerator 
+                to calculate a ratio. Then I grouped the join table by county 
+                and calcuated the average ratio of each county group. */
+                (select
+                    upcase(enr.COUNTY) as COUNTY
+                    /* use the number of students meeting university 
+                    requirements from table gradaf17 as the numerator, the 
+                    number of students totally enrolled on that year from table 
+                    enr16 as the denonminator, to calculate the ratio. As 
+                    students enrolled in AY2016 and graduated in AY2017, here I 
+                    chose to use enr16 rather than enr17. */
+                    , avg(gradaf17.TOTAL/enr.total_number_of_GR12_Graduate) as 
+                    Avg_Rate_of_Univ
+                from
+                    enr16_w3clean as enr
+                    , gradaf17_clean as gradaf17
+                where
+                    /* Both the county name and the cds_code need to match */
+                    enr.COUNTY = gradaf17.COUNTY
+                    and enr.CDS_CODE = gradaf17.CDS_CODE
+                group by
+                    enr.COUNTY) as Univ_Ratio_by_County
                 ,staffassign16_w3clean as StaffAssign
+            /*Below by using the WHERE clause, we combine the dataset 
+            Univ_Ratio_by_County and staffassign16_w3clean.*/
+                where StaffAssign.CountyName = Univ_Ratio_by_County.COUNTY) as 
+            univ_ratio_staff
+            /*Below we created gradaf1617 datasets by left join gradaf17 with 
+            gradaf16 on the condition that the variable COUNTY are the same. 
+            Then we group the jointed table by variable COUNTY, use summary 
+            function to get the sum of number of various ethnic groups for each 
+            of the counties. Later this combined dataset gradaf1617 would be 
+            combined with the combination of Univ_Ratio_by_County and
+            staffassign16_w3clean on the condition of the same value of 
+            COUNTY.*/
+            ,(select
+                upcase(A.COUNTY) as county
+                ,sum(A.HISPANIC) as county_hispanic
+                ,sum(A.AM_IND) as county_am_ind
+                ,sum(A.AFRICAN_AM) as county_african_am
+                ,sum(A.WHITE) as county_white
+                ,sum(A.TOTAL) as county_total
+            from
+                gradaf17_clean as A
+            left join
+                (
+                select
+                     COUNTY
+                    ,count(*) as row_count_for_unique_id_value
+                from gradaf16
+                group by COUNTY
+                having row_count_for_unique_id_value > 1
+                )
+                as B
+            on A.COUNTY=B.COUNTY
+            group by
+                A.COUNTY
+            having county_total > 0
+                ) as gradaf1617               
         where
-            StaffAssign.CountyName = Univ_Ratio_by_County.County
+            univ_ratio_staff.COUNTY = gradaf1617.county
     ;
 quit;
 
