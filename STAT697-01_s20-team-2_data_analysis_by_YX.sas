@@ -36,13 +36,21 @@ StaffAssign16.
 Limitations: Missing and incomplete data are omitted. And the results of 
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve data of average value of Estimated FTE by county, sorted by the value, from the table analytic_file_raw_checked, and save the output of query into a table. Then retrieve all the data from the newly-generated table. After that, use proc sgplot to output a boxplot to illustrate the distribution of the value of Estimated FTE for all the counties.
+Methodology: Use proc sql statement to retrieve data of average value of 
+Estimated FTE by county, sorted by the value, from the table 
+analytic_file_raw_checked, and save the output of query into a table. Then 
+retrieve all the data from the newly-generated table. After that, use proc 
+sgplot to output a boxplot to illustrate the distribution of the value of 
+Estimated FTE for all the counties.
 
-Followup Steps:More carefully and thoroughly inspections on the data could be done here.
+Followup Steps:More carefully and thoroughly inspections on the data could be 
+done here.
 */
 
 
-/*From the table analytic_file_raw_checked from the data preparation file, select the county name and the average value of Estimated FTE of each county, sort by the value of Estimated FTE*/
+/*From the table analytic_file_raw_checked from the data preparation file, 
+select the county name and the average value of Estimated FTE of each county, 
+sort by the value of Estimated FTE*/
 proc sql;
     create table q1 as
         select
@@ -69,11 +77,13 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating distribution of the value of AvgEstimatedFTE for all the counties."
+"Plots illustrating distribution of the value of AvgEstimatedFTE for all the 
+counties."
 ;
 
 footnote1 justtify=left
-"In the plot above, we can see that most the counties have the value of AvgEstimatedFTE between 20 and 35."
+"In the plot above, we can see that most the counties have the value of 
+AvgEstimatedFTE between 20 and 35."
 ;
 
 proc sgplot data=q1;
@@ -118,13 +128,22 @@ the gradaf17 dataset might not be best possible denonminator of the ratio as it
 does not include students with high school equivalencies. And the results from
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve data of average rate of students meeting university requirements by county, sorted by the value, from the table analytic_file_raw_checked, and save the output of query into a table. Then retrieve all the data from the newly-generated table. After that, use proc sgplot to output a boxplot to illustrate the distribution of the value of Avg_Rate_of_Univ for all the counties.
+Methodology: Use proc sql statement to retrieve data of average rate of students 
+meeting university requirements by county, sorted by the value, from the table 
+analytic_file_raw_checked, and save the output of query into a table. Then 
+retrieve all the data from the newly-generated table. After that, use proc 
+sgplot to output a boxplot to illustrate the distribution of the value of 
+Avg_Rate_of_Univ for all the counties.
 
-Followup Steps: More carefully and thoroughly inspections on the data could be done here. Sierra ranks NO.1 here with a rate of more than 1, it's obvisouly suspicious.
+Followup Steps: More carefully and thoroughly inspections on the data could be 
+done here. Sierra ranks NO.1 here with a rate of more than 1, it's obvisouly 
+suspicious.
 */
 
 
-/*Make a query using the proc sql and setting the number of output observations to be 10, to identify the top ten counties with highest value of average rates of students meeting university requirements.*/
+/*Make a query using the proc sql and setting the number of output observations 
+to be 10, to identify the top ten counties with highest value of average rates 
+of students meeting university requirements.*/
 proc sql;
     create table q2 as
         select
@@ -190,7 +209,8 @@ caused by other confounding factors.
 Methodology: Use proc corr to perform a correlation analysis,and then use proc
 sgplot to output a scatterplot, illustrating the correlation present.
 
-Followup Steps: A more formal inferential technique like linear regression might be needed.
+Followup Steps: A more formal inferential technique like linear regression might 
+be needed.
 */
 
 
