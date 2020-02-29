@@ -339,7 +339,7 @@ proc sql;
              CDS_Code
             ,County
             ,sum(GR_12) 
-            as total_number_of_GR12_Graduate
+            as total_num_of_Graduate
         from enr16
         group by CDS_Code
     ;
@@ -350,7 +350,7 @@ proc sql;
         select
              CDS_Code
             ,County
-            ,total_number_of_GR12_Graduate
+            ,total_num_of_Graduate
         from enr16_addsup
         where not(missing(CDS_Code))
     ;
@@ -368,7 +368,7 @@ proc sql;
     create table staffassign16_average as
         select
              CountyName
-            ,avg(EstimatedFTE) as AvgEstimatedFTE
+            ,round(avg(EstimatedFTE),0.01) as AvgEstimatedFTE
         from
             StaffAssign16
         group by
@@ -426,8 +426,8 @@ proc sql;
                     enr16 as the denonminator, to calculate the ratio. As 
                     students enrolled in AY2016 and graduated in AY2017, here I 
                     chose to use enr16 rather than enr17. */
-                    , avg(gradaf17.TOTAL/enr.total_number_of_GR12_Graduate) as 
-                    Avg_Rate_of_Univ
+                    ,round(avg(gradaf17.TOTAL/enr.total_num_of_Graduate),0.01) 
+                    as Avg_Rate_of_Univ
                 from
                     enr16_w3clean as enr
                     , gradaf17_clean as gradaf17
