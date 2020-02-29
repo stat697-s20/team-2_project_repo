@@ -17,15 +17,15 @@ title1 justify=left
 ;
 
 title2 justify=left
-"Rationale: This would help identify counties with high level of average Estimated FTE."
+"Rationale: This would help identify counties with high level of average Estimated FTE"
 ;
 
 footnote1 justify=left
-"The different from the county ranking NO.1 and county ranking No.10 in the value of average Estimated FTE is less than 7."
+"The difference between the county ranking NO.1 and county ranking No.10 regarding the value of average Estimated FTE is less than 7."
 ;
 
 footnote2 justify=left
-"Per the assumption here, the higher value of average Esimated FTE means that more teachers are working full-time."
+"Per the assumption here, the high value of average Esimated FTE means that more teachers are working on a full-time basis."
 ;
 
 /*
@@ -36,40 +36,34 @@ StaffAssign16.
 Limitations: Missing and incomplete data are omitted. And the results of 
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve data of average value of 
-Estimated FTE by county, sorted by the value, from the table 
-analytic_file_raw_checked, and save the output of query into a table. Then 
-retrieve all the data from the newly-generated table. After that, use proc 
-sgplot to output a boxplot to illustrate the distribution of the value of 
-Estimated FTE for all the counties.
+Methodology: Use proc sql statement to retrieve rom the table 
+analytic_file_raw_checkeddata of average value of Estimated FTE by county, then 
+get the retrieved data sorted by the value, and save the output of query into a 
+table. Then retrieve first 10 rows from the newly-generated table. After that, 
+use proc sgplot ststement to output a boxplot to illustrate the distribution of 
+the value of Estimated FTE for all the counties.
 
 Followup Steps:More carefully and thoroughly inspections on the data could be 
 done here.
 */
 
 
-/*From the table analytic_file_raw_checked from the data preparation file, 
-select the county name and the average value of Estimated FTE of each county, 
-sort by the value of Estimated FTE*/
-proc sql;
-    create table q1 as
-        select
-            AvgEstimatedFTE
-            ,COUNTY
-        from
-            analytic_file_raw_checked
-        order by 
-            AvgEstimatedFTE desc
-        ;
-quit;
+/*Use the proc report statement, from the data preparation file, select the 
+county name and the average value of Estimated FTE of each county, sort by the 
+value of Estimated FTE*/
+ods exclude all;
+proc report data=analytic_file_raw_checked out=q1(drop=_BREAK_);
+    columns
+        AvgEstimatedFTE
+        COUNTY
+    ;        
+    define AvgEstimatedFTE / order descending;
+run;
+ods exclude none;
 
-proc sql outobs=10;
-    select 
-        *
-    from
-        q1
-    ;
-quit;
+/*output first 10 rows of the above sorted data, addressing research question*/
+proc report data=q1(obs=10);
+run;
 
 /* clear titles/footnotes*/
 title;
@@ -78,7 +72,7 @@ footnote;
 
 title1 justify=left
 "Plots illustrating distribution of the value of AvgEstimatedFTE for all the 
-counties."
+counties"
 ;
 
 footnote1 justify=left
@@ -105,15 +99,15 @@ title1 justify=left
 ;
 
 title2 justify=left
-"Rationale: This would help identify counties with high percentage of students meeting UC/CSU requirements."
+"Rationale: This would help identify counties with high percentage of students meeting UC/CSU entrance requirements"
 ;
 
 footnote1 justify=left
-"The county Sierra here ranks No.1 with a rate of more than 1, which is suspicious and undoubtedly required more inspection."
+"The county Sierra here ranks No.1 with the percentage of students meeting UC/CSU entrance requirement being more than 1, which is obvisouly suspicious and undoubtedly required more inspection."
 ;
 
 footnote2 justify=left
-"The other nine counties have the rate between 0.5 and 0.6, looks sensible and bascialy consistent with the general recognition of 'good counties in California'."
+"The other nine counties have the rate between 0.5 and 0.6, which looks sensible and is bascialy consistent with the general public recognition of 'the good counties in California'."
 ;
 
 /*
@@ -128,22 +122,24 @@ the gradaf17 dataset might not be best possible denonminator of the ratio as it
 does not include students with high school equivalencies. And the results from
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve data of average rate of students 
-meeting university requirements by county, sorted by the value, from the table 
-analytic_file_raw_checked, and save the output of query into a table. Then 
-retrieve all the data from the newly-generated table. After that, use proc 
-sgplot to output a boxplot to illustrate the distribution of the value of 
-Avg_Rate_of_Univ for all the counties.
+Methodology: Use proc sql statement to retrieve rom the table 
+analytic_file_raw_checkeddata of average rate of students meeting UC/CSU 
+entrance requirement by county, then get the retrieved data sorted by the value, 
+and save the output of query into a table. Then retrieve the first 10 rows of 
+data from the newly-generated table. After that, use proc sgplot statement to 
+output a boxplot to illustrate the distribution of the value of Avg_Rate_of_Univ 
+for all the counties.
 
 Followup Steps: More carefully and thoroughly inspections on the data could be 
-done here. Sierra ranks NO.1 here with a rate of more than 1, it's obvisouly 
-suspicious.
+done here. Sierra county ranks NO.1 here with a rate of more than 1, it's 
+obvisouly suspicious.
 */
 
 
-/*Make a query using the proc sql and setting the number of output observations 
-to be 10, to identify the top ten counties with highest value of average rates 
-of students meeting university requirements.*/
+/*From the table analytic_file_raw_checked from the data preparation file, 
+select the county name and the average rate of students meeting UC/CSU 
+university requirement for each county, and sort by the value of 
+Avg_Rate_of_Univ*/
 proc sql;
     create table q2 as
         select
@@ -156,6 +152,7 @@ proc sql;
         ;
 quit;
 
+/*output first 10 rows of the above sorted data, addressing research question*/
 proc sql outobs=10;
     select 
         *
@@ -170,11 +167,11 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties."
+"Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties"
 ;
 
 footnote1 justify=left
-"In the plot above, apart from the Sierra county, which is a suspicious outlier, most the counties have the value of Avg_Rate_of_Univ between 0.2 and 0.6."
+"In the plot above, apart from the Sierra county, which is a suspicious outlier, most of the counties have the value of Avg_Rate_of_Univ between 0.2 and 0.6."
 ;
 
 proc sgplot data=q2;
@@ -196,34 +193,35 @@ title1 justify=left
 ;
 
 title2 justify=left
-"Rationale: This would help inform whether the level of average Estimated FTE is associated with the percentage of students meeting university requirements."
+"Rationale: This would help inform for counties in California whether the level of average Estimated FTE is associated with the percentage of students meeting UC/CSU entrance requirements."
 ;
 
 /*
 Note: This needs to obtain the correlation of the two variables explored above.
 
 Limitations: The comparison between the rankings produced by the previous two
-questions could be preliminary. And the overlaps on the two rankings could be 
-caused by other confounding factors.
+questions could be preliminary. And the pbserved association between these two 
+variablescould be caused by other confounding factors.
 
-Methodology: Use proc corr to perform a correlation analysis,and then use proc
-sgplot to output a scatterplot, illustrating the correlation present.
+Methodology: Use proc corr statement to perform a correlation analysis,and then 
+use procsgplot statement to output a scatterplot, illustrating the correlation 
+presented.
 
-Followup Steps: A more formal inferential technique like linear regression might 
-be needed.
+Followup Steps: A more formal inferential technique such as linear/logistic
+regression might be needed here.
 */
 
 
 title3 justify=left
-"Correlation analysis for AvgEstimatedFTE and Avg_Rate_of_Univ"
+"Correlation analysis between AvgEstimatedFTE and Avg_Rate_of_Univ"
 ;
 
 footnote1 justify=left
-"Assuming the two variables AvgEstimatedFTE and Avg_Rate_of_Univ are normally distribution, the correlation analysis shouws that there is a slightly positive correlation between the average value of estimated FTE per county and the average rate of students meeting univeristy requirements per county."
+"Assuming the two variables AvgEstimatedFTE and Avg_Rate_of_Univ are normally distributed, the correlation analysis shouws that there is a slightly positive correlation between the average value of estimated FTE for each county and the average rate of students meeting UC/CSU entrance requirements for each county."
 ;
 
 footnote1 justify=left
-"The value of Spearman correlation coefficient used here is slightly higher than the value of pearson correlation coefficient, although they are quite similar."
+"The value of Spearman correlation coefficient obtained here is slightly higher than the value of pearson correlation coefficient, although their calculation methods are quite similar."
 ;
 
 proc sql;
@@ -250,7 +248,7 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating the slight positive correlation between AvgEstimatedFTE and Avg_Rate_of_Univ."
+"Plots illustrating a slight positive correlation between AvgEstimatedFTE and Avg_Rate_of_Univ"
 ;
 
 footnote1 justify=left
