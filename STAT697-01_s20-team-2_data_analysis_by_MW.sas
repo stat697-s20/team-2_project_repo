@@ -1,4 +1,4 @@
-*******************************************************************************;
+"*******************************************************************************;
 **************** 80-character banner for column width reference ***************;
 * (set window width to banner width to calibrate line length to 80 characters *;
 *******************************************************************************;
@@ -10,14 +10,57 @@
 *******************************************************************************;
 * Research Question 1 Analysis Starting Point;
 *******************************************************************************;
+title1 justify=left
+
+'Question 1 of 3: Which 5 counties experienced the biggest decrease in UC/CSU
+eligible California graduates between AY2015-16 and AY2016-17?'
+;
+
+title2 justify=left
+'Rationale: This can help identify counties to consider for additional college
+-bound outreach based on depleting rate of meeting university requirements.'
+;
+
+footnote1 justify=left
+"Of the five counties with the biggest decrease in percent eligibility for
+meeting UC/CSU requirements between AY2015-16 and AY2016-17, the percentage
+point decreases from about __% to about __%."
+;
+
+footnote2 justify=left
+"These are significant demographic shifts for a community to experience, so
+further investiation should be performed to ensure no data errors are involved."
+;
+
+footnote3 justify=left
+"However, assuming there are no data issues underlying this analysis, possible
+explanations for such large increases include changing CA demographics and
+the ratification of Every Student Succeeds Act of 2015 (ESSA) to replace the No 
+Child Left Behind Act of 2002 (NCLB)."
+;
+
+Note: This compares the column "Total" from gradaf16 to the column of the
+column of the same name from gradaf17.
+/* This code shows correlation between races */
+proc corr data=gradaf1617;
+    var Hispanic 
+        Am_Ind
+        African_Am
+        White
+        Total;
+run;
+/* This code shows the county-wise scatterplot from raw dataset. Need to choose
+data source from cleaned version where the county Total is merged. */
+proc sgplot data=gradaf1617;
+    scatter
+        x=Total
+        y=County
+    ;
+
 /*
-Question 1 of 3: Is there a difference in proportion of those meeting UC/CSU 
-requirements among California high school graduates in AY2015-16 and AY2016-17? 
+Continue editing HERE.
 
-Rationale: This can help identify the difference in the average rate of meeting 
-UC/CSU requirements between AY2015-16 and AY2016-17.
-
-Note: The total of from schools in the same county are combined to make 
+The total of from schools in the same county are combined to make 
 Total16, Total17, and Total1617 for AY2015-16, AY2016-17, and the 
 combined total from each county in both academic years, respectively. From the 
 Exploratory Data Analysis (EPA), the primary key CDS_Codee between AY2015-16 and 
@@ -109,4 +152,4 @@ proc means data=gradaf1617;
 run;
 
 proc means data=gradaf17_COUNTY;
-run;
+run;"
