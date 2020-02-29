@@ -48,29 +48,22 @@ done here.
 */
 
 
-/*From the table analytic_file_raw_checked from the data preparation file, 
-select the county name and the average value of Estimated FTE of each county, 
-sort by the value of Estimated FTE*/
-proc sql;
-    create table q1 as
-        select
-            AvgEstimatedFTE
-            ,COUNTY
-        from
-            analytic_file_raw_checked
-        order by 
-            AvgEstimatedFTE desc
-        ;
-quit;
+/*Use the proc report statement, from the data preparation file, select the 
+county name and the average value of Estimated FTE of each county, sort by the 
+value of Estimated FTE*/
+ods exclude all;
+proc report data=analytic_file_raw_checked out=q1(drop=_BREAK_);
+    columns
+        AvgEstimatedFTE
+        COUNTY
+    ;        
+    define AvgEstimatedFTE / order descending;
+run;
+ods exclude none;
 
 /*output first 10 rows of the above sorted data, addressing research question*/
-proc sql outobs=10;
-    select 
-        *
-    from
-        q1
-    ;
-quit;
+proc report data=q1(obs=10);
+run;
 
 /* clear titles/footnotes*/
 title;
