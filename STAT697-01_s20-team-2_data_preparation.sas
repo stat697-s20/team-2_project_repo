@@ -373,7 +373,7 @@ combine these four datasets into one table.*/
 proc sql;
     create table analytic_file_raw as
         select 
-            gradaf1617.County
+             gradaf1617.County
             ,gradaf1617.County_Am_Ind
             ,gradaf1617.County_African_Am
             ,gradaf1617.County_White
@@ -384,7 +384,7 @@ proc sql;
             /* Below we combine the dataset univ_ratio_by_county with dataset 
             staffassign16_clean, and name the new dataset as univ_ratio_staff */
             (select 
-                univ_ratio_by_county.County
+                 univ_ratio_by_county.County
                 ,univ_ratio_by_county.Avg_Rate_of_Univ
                 ,StaffAssign.Avg_Estimated_FTE
             from   
@@ -407,8 +407,8 @@ proc sql;
                     ,round(avg(gradaf17.Total/enr.Total_Num_of_Graduate),0.01) 
                     as Avg_Rate_of_Univ
                 from
-                    enr16_clean as enr
-                    , gradaf17_clean as gradaf17
+                     enr16_clean as enr
+                    ,gradaf17_clean as gradaf17
                 where
                     /* Both the county name and the cds_code need to match */
                     enr.County = gradaf17.County
@@ -429,7 +429,7 @@ proc sql;
             staffassign16_clean on the condition of the same value of 
             column County.*/
             ,(select
-                upcase(A.County) as County
+                 upcase(A.County) as County
                 ,sum(A.Hispanic) as County_Hispanic
                 ,sum(A.Am_Ind) as County_Am_Ind
                 ,sum(A.African_Am) as County_African_Am
