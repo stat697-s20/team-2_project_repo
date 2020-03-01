@@ -36,12 +36,12 @@ StaffAssign16.
 Limitations: Missing and incomplete data are omitted. And the results of 
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve rom the table 
-analytic_file_raw_checkeddata of average value of Estimated FTE by county, then 
-get the retrieved data sorted by the value, and save the output of query into a 
-table. Then retrieve first 10 rows from the newly-generated table. After that, 
-use proc sgplot ststement to output a boxplot to illustrate the distribution of 
-the value of Estimated FTE for all the counties.
+Methodology: Use proc sql statement to retrieve from the table 
+analytic_file_raw_checked the data of average value of Estimated FTE by county, 
+then get the retrieved data sorted by the value, and save the output of query 
+into a table. Then retrieve first 10 rows from the newly-generated table. After 
+that, use proc sgplot ststement to output a boxplot to illustrate the 
+distribution of the value of Estimated FTE for all the counties.
 
 Followup Steps:More carefully and thoroughly inspections on the data could be 
 done here.
@@ -54,10 +54,10 @@ value of Estimated FTE*/
 ods exclude all;
 proc report data=analytic_file_raw_checked out=q1(drop=_BREAK_);
     columns
-        AvgEstimatedFTE
-        COUNTY
+        Avg_Estimated_FTE
+        County
     ;        
-    define AvgEstimatedFTE / order descending;
+    define Avg_Estimated_FTE / order descending;
 run;
 ods exclude none;
 
@@ -71,17 +71,17 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating distribution of the value of AvgEstimatedFTE for all the 
+"Plots illustrating distribution of the value of Avg_Estimated_FTE for all the 
 counties"
 ;
 
 footnote1 justify=left
 "In the plot above, we can see that most the counties have the value of 
-AvgEstimatedFTE between 20 and 35."
+Avg_Estimated_FTE between 20 and 35."
 ;
 
 proc sgplot data=q1;
-    hbox AvgEstimatedFTE / category=COUNTY;
+    hbox Avg_Estimated_FTE / category=County;
 run;
 
 /* clear titles/footnotes*/
@@ -113,7 +113,7 @@ footnote2 justify=left
 /*
 Note: This needs to find out observation units with column 'GR_12' not equal to 
 zero in the dataset enr16, and divide their number of Grade twelve enrollments 
-by the value of column 'TOTAL' of the observation units with the same SchoolCode 
+by the value of column 'Total' of the observation units with the same SchoolCode 
 in the dataset gradaf17, then get the average of these results from observation 
 units with the same name of county.
 
@@ -122,8 +122,8 @@ the gradaf17 dataset might not be best possible denonminator of the ratio as it
 does not include students with high school equivalencies. And the results from
 different counties could be of little difference. 
 
-Methodology: Use proc sql statement to retrieve rom the table 
-analytic_file_raw_checkeddata of average rate of students meeting UC/CSU 
+Methodology: Use proc sql statement to retrieve from the table 
+analytic_file_raw_checked the data of average rate of students meeting UC/CSU 
 entrance requirement by county, then get the retrieved data sorted by the value, 
 and save the output of query into a table. Then retrieve the first 10 rows of 
 data from the newly-generated table. After that, use proc sgplot statement to 
@@ -144,7 +144,7 @@ proc sql;
     create table q2 as
         select
             Avg_Rate_of_Univ
-            ,COUNTY
+            ,County
         from
             analytic_file_raw_checked
         order by 
@@ -175,7 +175,7 @@ footnote1 justify=left
 ;
 
 proc sgplot data=q2;
-    hbox Avg_Rate_of_Univ / category=COUNTY;
+    hbox Avg_Rate_of_Univ / category=County;
 run;
 
 /* clear titles/footnotes*/
@@ -201,7 +201,7 @@ Note: This needs to obtain the correlation of the two variables explored above.
 
 Limitations: The comparison between the rankings produced by the previous two
 questions could be preliminary. And the pbserved association between these two 
-variablescould be caused by other confounding factors.
+variables could be caused by other confounding factors.
 
 Methodology: Use proc corr statement to perform a correlation analysis,and then 
 use procsgplot statement to output a scatterplot, illustrating the correlation 
@@ -213,11 +213,11 @@ regression might be needed here.
 
 
 title3 justify=left
-"Correlation analysis between AvgEstimatedFTE and Avg_Rate_of_Univ"
+"Correlation analysis between Avg_Estimated_FTE and Avg_Rate_of_Univ"
 ;
 
 footnote1 justify=left
-"Assuming the two variables AvgEstimatedFTE and Avg_Rate_of_Univ are normally distributed, the correlation analysis shouws that there is a slightly positive correlation between the average value of estimated FTE for each county and the average rate of students meeting UC/CSU entrance requirements for each county."
+"Assuming the two variables Avg_Estimated_FTE and Avg_Rate_of_Univ are normally distributed, the correlation analysis shouws that there is a slightly positive correlation between the average value of estimated FTE for each county and the average rate of students meeting UC/CSU entrance requirements for each county."
 ;
 
 footnote1 justify=left
@@ -228,18 +228,18 @@ proc sql;
     create table q3 as
         select
              Avg_Rate_of_Univ
-            ,q2.COUNTY
-            ,AvgEstimatedFTE
+            ,q2.County
+            ,Avg_Estimated_FTE
         from
              q1
             ,q2
         where
-            q1.COUNTY = q2.COUNTY
+            q1.County = q2.County
         ;
 quit;
 
 proc corr data=q3 noprob nosimple PEARSON SPEARMAN;
-   var AvgEstimatedFTE Avg_Rate_of_Univ;
+   var Avg_Estimated_FTE Avg_Rate_of_Univ;
 run;
 
 /* clear titles/footnotes*/
@@ -248,7 +248,7 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating a slight positive correlation between AvgEstimatedFTE and Avg_Rate_of_Univ"
+"Plots illustrating a slight positive correlation between Avg_Estimated_FTE and Avg_Rate_of_Univ"
 ;
 
 footnote1 justify=left
@@ -256,8 +256,8 @@ footnote1 justify=left
 ;
 
 proc sgplot data=q3;
-    scatter x=AvgEstimatedFTE y=Avg_Rate_of_Univ;
-    ellipse x=AvgEstimatedFTE y=Avg_Rate_of_Univ;
+    scatter x=Avg_Estimated_FTE y=Avg_Rate_of_Univ;
+    ellipse x=Avg_Estimated_FTE y=Avg_Rate_of_Univ;
 run;
 
 /* clear titles/footnotes*/
