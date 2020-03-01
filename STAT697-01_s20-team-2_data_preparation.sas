@@ -378,7 +378,7 @@ proc sql;
             /*Below by using the WHERE clause, we combine the dataset 
             univ_ratio_by_county and staffassign16_clean.*/
                 where staffassign.CountyName = univ_ratio_by_county.County) as 
-            univ_ratio_staff
+                univ_ratio_staff
             /*Below we created gradaf1617 datasets by left join gradaf17 with 
             gradaf16 on the condition that the variable County are the same. 
             Then we group the jointed table by variable County, use summary 
