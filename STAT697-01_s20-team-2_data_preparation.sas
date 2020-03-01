@@ -399,7 +399,7 @@ proc sql;
             left join
                 (
                 select
-                     COUNTY
+                     County
                     ,count(*) as Row_Count_for_Unique_Id_Value
                 from gradaf16
                 group by County
