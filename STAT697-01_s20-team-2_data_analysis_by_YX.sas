@@ -4,7 +4,7 @@
 *******************************************************************************;
 
 /* load external file that will generate final analytic file */
-%include "./STAT697-01_s20-team-2_data_preparation.sas";
+%include './STAT697-01_s20-team-2_data_preparation.sas';
 
 
 *******************************************************************************;
