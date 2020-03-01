@@ -310,7 +310,7 @@ that share the same unique id value - CDS_Code. After exeuting this query, we
 see there are 8239 rows and 3 columns, and the table enr16_addsup will have no 
 duplicated unique id values. In the where clause, the condition is the column 
 County should be not missing as later County would be the primary key of the 
-combined table;
+combined table*/
 proc sql;
     create table enr16_addsup as
         select
@@ -474,5 +474,13 @@ proc sql;
             ,Avg_Rate_of_Univ
         from analytic_file_raw
         where not(missing(County))
+    ;
+quit;
+
+proc sql;
+    select
+        *
+    from
+        analytic_file_raw_checked
     ;
 quit;
