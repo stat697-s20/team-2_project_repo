@@ -11,7 +11,6 @@
 * Research Question 1 Analysis Starting Point;
 *******************************************************************************;
 
-
 title1 justify=left
 "Research Question 1 of 3: What are the top ten counties that have the highest average Estimated FTE? "
 ;
@@ -92,7 +91,6 @@ footnote;
 *******************************************************************************;
 * Research Question 2 Analysis Starting Point;
 *******************************************************************************;
-
 
 title1 justify=left
 "Research Question 2 of 3: What are the top ten counties that have the highest percentage of graduates meeting UC/CSU entrance requirement out of all the students enrolled into Grade twelve? "
@@ -186,7 +184,6 @@ footnote;
 *******************************************************************************;
 * Research Question 3 Analysis Starting Point;
 *******************************************************************************;
-
 
 title1 justify=left
 "Research Question 3 of 3: Is there any relationship between the two variables  respectively explored by the above two questions?"
