@@ -10,33 +10,25 @@
 *******************************************************************************;
 * Research Question 1 Analysis Starting Point;
 *******************************************************************************;
-title1 justify=left
 
-'Question 1 of 3: Which 5 counties experienced the biggest decrease in UC/CSU
-eligible California graduates between AY2015-16 and AY2016-17?'
+title1 justify=left
+'Question 1 of 3: Which 5 counties experienced the biggest decrease in UC/CSU eligible California graduates between AY2015-16 and AY2016-17?'
 ;
 
 title2 justify=left
-'Rationale: This can help identify counties to consider for additional college
--bound outreach based on depleting rate of meeting university requirements.'
+'Rationale: This can help identify counties to consider for additional college-bound outreach based on depleting rate of meeting university requirements.'
 ;
 
 footnote1 justify=left
-"Of the five counties with the biggest decrease in percent eligibility for
-meeting UC/CSU requirements between AY2015-16 and AY2016-17, the percentage
-point decreases from about __% to about __%."
+"Of the five counties with the biggest decrease in percent eligibility formeeting UC/CSU requirements between AY2015-16 and AY2016-17, the percentage point decreases from about __% to about __%."
 ;
 
 footnote2 justify=left
-"These are significant demographic shifts for a community to experience, so
-further investiation should be performed to ensure no data errors are involved."
+"These are significant demographic shifts for a community to experience, so further investiation should be performed to ensure no data errors are involved."
 ;
 
 footnote3 justify=left
-"However, assuming there are no data issues underlying this analysis, possible
-explanations for such large increases include changing CA demographics and
-the ratification of Every Student Succeeds Act of 2015 (ESSA) to replace the No 
-Child Left Behind Act of 2002 (NCLB)."
+"However, assuming there are no data issues underlying this analysis, possible explanations for such large increases include changing CA demographics and the ratification of Every Student Succeeds Act of 2015 (ESSA) to replace the No Child Left Behind Act of 2002 (NCLB)."
 ;
 
 /*
@@ -44,11 +36,11 @@ Note: This compares the column "Total" from gradaf16 to the column of the
 column of the same name from gradaf17 to the column of the same name from 
 gradaf16.
 
-Limitations: Values of "Percent (%) Eligible for UC/CSU" equal to zero should be
-excluded from this analysis, since they are potentially missing data values.
+Limitations: Values of Total equal to zero should be excluded from this 
+analysis, since they are potentially missing data values.
 
 Methodology: Use proc sort to create a temporary sorted table in descending 
-order by analytic_file_raw_checkeddata, with ties broken by County. The use
+order by analytic_file_raw_checked data, with ties broken by County. The use
 proc report to print the first five rows of the sorted dataset.
 
 Followup Steps: More carefully clean values in order to filter out any possible
@@ -56,31 +48,32 @@ illegal values, and better handling missing data, e.g., by using a previous
 year's data or a rolling average of previous years' data as a proxy.
 */
 
-/* sort by increase in XXX_Clean Eligbility Rate, removing all missing and 
-invalid County values from XXX_Clean Eligibility Rates in AY2016 and AY 2017 */
+/* sort by increase in analytic_file_raw_checked Eligbility Rate, removing all 
+missing and invalid County values from analytic_file_raw_checked UC/CSU 
+Eligibility Rates in AY2015-16 and AY2016-17 */
 proc sort
-        data=cde_analytic_file
-        out=cde_analytic_file_by_FRPM_Incr
+        data=analytic_file_raw_checked
+        out=analytic_file_by_GRADAF_Decr
     ;
     by
-        descending FRPM_Percentage_Point_Increase
-        School
+        descending GRADAF_Total_Decrease
+        County
     ;
-    where
-        Percent_Eligible_FRPM_K12_1415 > 0
+    where    /* gradaf17_clean.Total as County_Total, and sum of Total 
+    in AY2015-16 and AY2016-17 as gradaf1617.County_Total */ 
+        County_Total > 0
         and
-        Percent_Eligible_FRPM_K12_1516 > 0
+        gradaf1617.County_Total > 0
     ;
 run;
 
-/* output first five rows of resulting sorted data, addressing research question */
-proc report data=cde_analytic_file_by_FRPM_Incr(obs=5);
+/* output first five rows of resulting sorted data, addressing research Q */
+proc report data=analytic_file_by_GRADAF_Decr(obs=5);
     columns
-        School
-        District
-        Percent_Eligible_FRPM_K12_1415
-        Percent_Eligible_FRPM_K12_1516
-        FRPM_Percentage_Point_Increase
+        County
+        County_Total
+        gradaf1617.County_Total
+        GRADAF_Total_Decrease
     ;
 run;
 	
