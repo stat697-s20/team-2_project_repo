@@ -181,9 +181,9 @@ duplicate ids values. */
 proc sql;
 create table gradaf17_raw_dups as
         select
-             county
-            ,district
-            ,school
+             County
+            ,District
+            ,School
             ,count(*) 
             as row_count_for_unique_id_value
         from gradaf17
@@ -260,47 +260,6 @@ proc sql;
 quit;
 
 
-/* As per data-integrity checks and data-integrity mitigation steps for gradaf16 
-and gradaf17 done above, now the datasets gradaf16_nomissing and 
-gradaf17_nomissing should have no duplicate/repeated unique id values, and all 
-unique id values will correspond to our experimental units of interest, 
-California counties; this means the column County in gradaf1617 is guaranteed to 
-form a primary key. Join gradaf16 and gradaf17 where County is the primary key 
-*/
-proc sql;
-    create table gradaf1617 as
-        select *
-        from gradaf16_nomissing as A
-            left join
-            (
-            select
-                 County
-                ,count(*) as row_count_for_unique_id_value
-            from gradaf17_nomissing
-            group by County
-            )
-            as B
-            on A.County=B.County
-        having
-            row_count_for_unique_id_value > 1
-    ;
-    /* It is too tedious to compare the graduation rate between all schools and
-    school districts in California. Instead, we combine them by the county. */
-    create table gradaf17_county as
-        select
-             County
-            ,Hispanic
-            ,Am_Ind
-            ,African_Am
-            ,White
-            ,sum(Total) 
-            as County_Total
-        from gradaf17_clean
-        group by County
-    ;
-quit;
-
-
 /* For dataset enr16, use summary function to create new columns by adding the 
 value of the same columns of multiple observation units which share the same 
 unique id. As one specific school goes with multiple rows of data with each row 
@@ -311,6 +270,7 @@ see there are 8239 rows and 3 columns, and the table enr16_addsup will have no
 duplicated unique id values. In the where clause, the condition is the column 
 County should be not missing as later County would be the primary key of the 
 combined table;
+*/
 proc sql;
     create table enr16_addsup as
         select
@@ -465,7 +425,8 @@ new table generated has the same number of observations units, which is 49, as
 the original table. */
 proc sql;
     create table analytic_file_raw_checked as
-        select distinct County
+        select distinct 
+             County
             ,County_Am_Ind
             ,County_African_Am
             ,County_White
