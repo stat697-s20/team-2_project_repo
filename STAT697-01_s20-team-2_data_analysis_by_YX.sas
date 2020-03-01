@@ -227,11 +227,11 @@ footnote1 justify=left
 proc sql;
     create table q3 as
         select
-            Avg_Rate_of_Univ
+             Avg_Rate_of_Univ
             ,q2.COUNTY
             ,AvgEstimatedFTE
         from
-            q1
+             q1
             ,q2
         where
             q1.COUNTY = q2.COUNTY
