@@ -12,11 +12,11 @@
 *******************************************************************************;
 
 title1 justify=left
-"Research Question 1 of 3: What are the top ten counties that have the highest average Estimated FTE? "
+'Research Question 1 of 3: What are the top ten counties that have the highest average Estimated FTE?'
 ;
 
 title2 justify=left
-"Rationale: This would help identify counties with high level of average Estimated FTE"
+'Rationale: This would help identify counties with high level of average Estimated FTE'
 ;
 
 footnote1 justify=left
@@ -93,15 +93,15 @@ footnote;
 *******************************************************************************;
 
 title1 justify=left
-"Research Question 2 of 3: What are the top ten counties that have the highest percentage of graduates meeting UC/CSU entrance requirement out of all the students enrolled into Grade twelve? "
+'Research Question 2 of 3: What are the top ten counties that have the highest percentage of graduates meeting UC/CSU entrance requirement out of all the students enrolled into Grade twelve?'
 ;
 
 title2 justify=left
-"Rationale: This would help identify counties with high percentage of students meeting UC/CSU entrance requirements"
+'Rationale: This would help identify counties with high percentage of students meeting UC/CSU entrance requirements'
 ;
 
 footnote1 justify=left
-"The county Sierra here ranks No.1 with the percentage of students meeting UC/CSU entrance requirement being more than 1, which is obvisouly suspicious and undoubtedly required more inspection."
+"The county Sierra here ranks No.1 with the percentage of students meeting UC/CSU entrance requirement being more than 1, which is obviously suspicious and undoubtedly required more inspection."
 ;
 
 footnote2 justify=left
@@ -130,7 +130,7 @@ for all the counties.
 
 Followup Steps: More carefully and thoroughly inspections on the data could be 
 done here. Sierra county ranks NO.1 here with a rate of more than 1, it's 
-obvisouly suspicious.
+obviously suspicious.
 */
 
 
@@ -165,7 +165,7 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties"
+'Plots illustrating distribution of the value of Avg_Rate_of_Univ for all the counties'
 ;
 
 footnote1 justify=left
@@ -186,11 +186,11 @@ footnote;
 *******************************************************************************;
 
 title1 justify=left
-"Research Question 3 of 3: Is there any relationship between the two variables  respectively explored by the above two questions?"
+'Research Question 3 of 3: Is there any relationship between the two variables  respectively explored by the above two questions?'
 ;
 
 title2 justify=left
-"Rationale: This would help inform for counties in California whether the level of average Estimated FTE is associated with the percentage of students meeting UC/CSU entrance requirements."
+'Rationale: This would help inform for counties in California whether the level of average Estimated FTE is associated with the percentage of students meeting UC/CSU entrance requirements.'
 ;
 
 /*
@@ -210,7 +210,7 @@ regression might be needed here.
 
 
 title3 justify=left
-"Correlation analysis between Avg_Estimated_FTE and Avg_Rate_of_Univ"
+'Correlation analysis between Avg_Estimated_FTE and Avg_Rate_of_Univ'
 ;
 
 footnote1 justify=left
@@ -245,7 +245,7 @@ footnote;
 
 
 title1 justify=left
-"Plots illustrating a slight positive correlation between Avg_Estimated_FTE and Avg_Rate_of_Univ"
+'Plots illustrating a slight positive correlation between Avg_Estimated_FTE and Avg_Rate_of_Univ'
 ;
 
 footnote1 justify=left

@@ -436,11 +436,3 @@ proc sql;
         where not(missing(County))
     ;
 quit;
-
-proc sql;
-    select
-        *
-    from
-        analytic_file_raw_checked
-    ;
-quit;
